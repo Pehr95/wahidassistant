@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-public class ScheduleScraper {
+public class Scraper {
     private final Map<String, Integer> monthConversion = makeMonthConversionHashMap();
 
     public Schedule scrapeSchedule(String url, int weeksAhead){

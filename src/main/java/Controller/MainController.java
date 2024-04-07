@@ -1,14 +1,14 @@
 package Controller;
 
-import Boundary.ScheduleScraper;
+import Boundary.Scraper;
 import Entity.Schedule;
 
 public class MainController {
     private DatabaseController databaseController;
-    private ScheduleScraper scheduleScraper;
+    private Scraper scheduleScraper;
     public MainController() {
         databaseController = new DatabaseController();
-        scheduleScraper = new ScheduleScraper();
+        scheduleScraper = new Scraper();
 
     }
 
