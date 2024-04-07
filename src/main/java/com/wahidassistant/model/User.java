@@ -1,4 +1,4 @@
-package old.Entity;
+package com.wahidassistant.model;
 
 import java.util.ArrayList;
 
