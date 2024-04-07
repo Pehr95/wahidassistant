@@ -1,7 +1,7 @@
-package Controller;
+package old.Controller;
 
-import Boundary.Scraper;
-import Entity.Schedule;
+import old.Boundary.Scraper;
+import old.Entity.Schedule;
 
 public class MainController {
     private DatabaseController databaseController;

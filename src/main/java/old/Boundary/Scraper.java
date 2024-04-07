@@ -1,7 +1,7 @@
-package Boundary;
+package old.Boundary;
 
-import Entity.Event;
-import Entity.Schedule;
+import old.Entity.Event;
+import old.Entity.Schedule;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
@@ -62,7 +62,7 @@ public class Scraper {
 
                 // Course name
                 if (!row.select("td.commonCell:nth-of-type(5) a").isEmpty()){
-                    courseName = row.select("td.commonCell:nth-of-type(5) a").getFirst().text();
+                    courseName = row.select("td.commonCell:nth-of-type(5) a").get(0).text();
                 }
 
                 // Teacher codes to names
@@ -79,12 +79,12 @@ public class Scraper {
 
                 // Description
                 if (!row.select("td.data.commonCell:nth-of-type(9)").isEmpty()){
-                    description = row.select("td.data.commonCell:nth-of-type(9)").getFirst().text();
+                    description = row.select("td.data.commonCell:nth-of-type(9)").get(0).text();
                 }
 
                 // Last updated
                 if (!row.select("td.data.commonCell:nth-of-type(10)").isEmpty()){
-                    lastUpdated = row.select("td.data.commonCell:nth-of-type(10)").getFirst().text();
+                    lastUpdated = row.select("td.data.commonCell:nth-of-type(10)").get(0).text();
 
                 }
 

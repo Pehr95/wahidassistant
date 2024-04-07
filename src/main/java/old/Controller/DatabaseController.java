@@ -1,7 +1,7 @@
-package Controller;
+package old.Controller;
 
-import Entity.Event;
-import Entity.Schedule;
+import old.Entity.Event;
+import old.Entity.Schedule;
 import com.mongodb.client.MongoClient;
 import com.mongodb.client.MongoClients;
 import com.mongodb.client.MongoCollection;
