@@ -180,41 +180,6 @@ public class WebScraper {
         return new Timestamp[] {Timestamp.valueOf(startDateTime),Timestamp.valueOf(endDateTime)};
     }
 
-
-
-    public Timestamp[] getTimeStamps1(String year, String dayAndMonth, String startAndEndTime) {
-        String[] parts = dayAndMonth.split(" ");
-        int day = Integer.parseInt(parts[0]);
-        int month = monthConversion.get(parts[1].toLowerCase());
-
-        parts = startAndEndTime.split("-");
-        String startTime = parts[0];
-        String endTime = parts[1];
-        String[] timeComponentsStartTime = startTime.split(":");
-        String[] timeComponentsEndTime = endTime.split(":");
-        int startHour = Integer.parseInt(timeComponentsStartTime[0]);
-        int startMinute = Integer.parseInt(timeComponentsStartTime[1]);
-        int endHour = Integer.parseInt(timeComponentsEndTime[0]);
-        int endMinute = Integer.parseInt(timeComponentsEndTime[1]);
-
-        // Parse the given date and time
-        LocalDateTime startDateTime = LocalDateTime.of(Integer.parseInt(year), month, day, startHour, startMinute);
-        LocalDateTime endDateTime = LocalDateTime.of(Integer.parseInt(year), month, day, endHour, endMinute);
-
-        // Convert LocalDateTime to Instant
-        Instant startInstant = startDateTime.toInstant(OffsetDateTime.now().getOffset());
-        Instant endInstant = endDateTime.toInstant(OffsetDateTime.now().getOffset());
-
-        // Convert Instant to Timestamp
-        Timestamp startTimestamp = Timestamp.from(startInstant);
-        Timestamp endTimestamp = Timestamp.from(endInstant);
-
-        return new Timestamp[]{startTimestamp, endTimestamp};
-    }
-
-
-
-
     public int calculateDuration(Timestamp[] timestamps) {
         return (int) ((timestamps[1].getTime() - timestamps[0].getTime()) / (1000 * 60));
     }
