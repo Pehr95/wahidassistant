@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="favicon.ico">
+    <title>Example</title>
+    <link rel="stylesheet" href="main.css">
+    <link rel="stylesheet" href="responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+</head>
+<body>
+
+    <header>
+        <div class="max-width">
+            <div class="topnav">
+                <a href="#" class="active">Wahid Assistant</a>
+                <div id="myLinks">
+                    <a href="#">Måndag</a>
+                    <a href="#">Tisdag</a>
+                    <a href="#">Onsdag</a>
+                    <a href="#">Torsdag</a>
+                    <a href="#">Fredag</a>
+                </div>
+                <a href="javascript:void(0);" class="icon" onclick="myFunction()">
+                    <i class="fa fa-bars"></i>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <section class="container" id="container">
+        <div class="max-width">
+            <div class="schema-container" data-aos="fade-down">
+                <div class="schema">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        function myFunction() {
+            var x = document.getElementById("myLinks");
+            if (x.style.display === "block") {
+                x.style.display = "none";
+            } else {
+                x.style.display = "block";
+            }
+        }
+    
+        const schemaList = document.querySelector('.schema');
+    
+        fetch('./data.json') 
+        .then(res => res.json())
+        .then(data => {
+            data.courses.forEach(course => {
+                schemaList.insertAdjacentHTML('beforeend', `
+                    <div class="schema-item">
+                        <i class="fas fa-book"></i> <!-- Uppdaterad klass för Font Awesome-ikonen -->
+                        <a class="schema-link">
+                            <span class="time">${course.startTime} - ${course.endTime}</span>, ${course.courseID}, ${course.courseName}, ${course.description}, ${course.courseRoom}, ${course.firstName} ${course.lastName}
+                        </a>
+                    </div>
+                `);
+            });
+        })
+        .catch(error => {
+            console.error('Error fetching data:', error);
+        });
+    </script>
+
+</body>
+</html>
