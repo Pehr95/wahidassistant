@@ -160,3 +160,6 @@ input::placeholder {
   color: black;
   text-align: center;
 }
+button.hidden {
+  display: none;
+}

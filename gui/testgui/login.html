@@ -6,17 +6,6 @@
     <link rel="stylesheet" href="main.css">
     <link rel="stylesheet" href="responsive.css"> 
     <title>Document</title>
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            document.querySelector('input[name="upprepa_kod"]').style.display = "none";
-
-            document.querySelector('button[type="submit"][value="Registrera"]').addEventListener("click", function(event) {
-                event.preventDefault(); 
-              
-                document.querySelector('input[name="upprepa_kod"]').style.display = "block";
-            });
-        });
-    </script>
 </head>
 <body>
     <form action="#" method="post">
@@ -26,15 +15,32 @@
         
         <div class="loginpg">
             <input type="text" name="avnamn" placeholder="Användarnamn" required>
-      
             <input type="password" name="kod" placeholder="Lösenord" required>
-
-            <input type="password" name="upprepa_kod" placeholder="Upprepa lösenord" required>
-      
+            <input type="password" name="upprepa_kod" placeholder="Upprepa lösenord" style="display: none;" required>
             <button type="submit">Logga in</button>
-          
-            <button type="submit" value="Registrera">Registrera</button>
+            <button type="submit" class="register-button">Registrera</button>
         </div>
     </form>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            var registerButton = document.querySelector('.register-button');
+            var loginButton = document.querySelector('button[type="submit"]:not(.register-button)');
+            var upprepaKodInput = document.querySelector('input[name="upprepa_kod"]');
+    
+            upprepaKodInput.style.display = "none";
+    
+            registerButton.addEventListener("click", function(event) {
+                event.preventDefault(); 
+              
+                upprepaKodInput.style.display = "block";
+                loginButton.classList.add('hidden');
+            });
+    
+            loginButton.addEventListener("click", function(event) {
+                upprepaKodInput.style.display = "none";
+            });
+        });
+    </script>
 </body>
 </html>
