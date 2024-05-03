@@ -25,4 +25,7 @@ public class ScheduleService {
         return scheduleRepository.findAll().get(0).getEvents();
     }
 
+    public List<String> getScheduleByUsername() {
+        return null;
+    }
 }
