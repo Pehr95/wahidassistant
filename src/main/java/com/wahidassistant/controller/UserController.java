@@ -38,6 +38,11 @@ public class UserController {
         return "Settings changed";
     }
 
+    @GetMapping("/get-username")
+    public String showUsername(HttpServletRequest request) {
+        return getUsername(request);
+    }
+
 
     private String getUsername(HttpServletRequest request) {
         final String authHeader = request.getHeader("Authorization");

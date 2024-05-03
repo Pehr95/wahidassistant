@@ -26,6 +26,8 @@ public class AuthenticationService {
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
         }
 
+        // todo: Implement the registration logic
+
         var user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
