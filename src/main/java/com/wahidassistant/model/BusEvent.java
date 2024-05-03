@@ -29,8 +29,7 @@ public class BusEvent {
 
     public BusEvent(){}
 
-    public BusEvent(String id, ArrayList<String> busNameAndNUmber, Date departureTime, Date arrivalTime, int duration, String origin, String destination, int preferredArrivalTime) {
-        Id = id;
+    public BusEvent(ArrayList<String> busNameAndNUmber, Date departureTime, Date arrivalTime, int duration, String origin, String destination, int preferredArrivalTime) {
         this.busNameAndNUmber = busNameAndNUmber;
         this.departureTime = departureTime;
         this.arrivalTime = arrivalTime;
@@ -38,14 +37,6 @@ public class BusEvent {
         this.origin = origin;
         this.destination = destination;
         this.preferredArrivalTime = preferredArrivalTime;
-    }
-
-    public String getId() {
-        return Id;
-    }
-
-    public void setId(String id) {
-        Id = id;
     }
 
     public ArrayList<String> getBusNameAndNUmber() {

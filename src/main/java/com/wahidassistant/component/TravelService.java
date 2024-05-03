@@ -96,11 +96,14 @@ public class TravelService {
     }
 
     //todo: Få ut första dagens event, få ut eventets tid, skapa bus event och lägg in i mongodb som BusEvent innan eventet i personliga schedule.
+    /*
     public BusEvent busEventbeforeEvent(Event event, User user){
 
-        event.
+        user.getCustomEvents.getfirst
 
         BusEvent busEvent = new BusEvent();
         return busEvent;
     }
+
+     */
 }
