@@ -22,6 +22,8 @@ public class WebScraper {
     public Schedule scrapeSchedule(String url, int weeksAhead){
         Document document = fetchDocument(url);
 
+        // Todo: felhantering. Kolla om dokumentet har rätt typ av format samt att datum formattering är korrekt.
+
         if (document == null) {
             return null;
         }
@@ -87,7 +89,6 @@ public class WebScraper {
                 // Last updated
                 if (!row.select("td.data.commonCell:nth-of-type(10)").isEmpty()){
                     lastUpdated = row.select("td.data.commonCell:nth-of-type(10)").get(0).text();
-
                 }
 
                 // Convert the year, date and time to timestamps
@@ -99,7 +100,6 @@ public class WebScraper {
                 if(timestamps[1].getTime() < timestampThreshold.getTime()){
                     events.add(new Event(  courseName,  timestamps[0],  timestamps[1],  calculateDuration(timestamps),  rooms,  teachers,  description, convertLastUpdatedToDate(lastUpdated)));
                 }
-
             }
         }
         return new Schedule(url, events);
@@ -113,6 +113,7 @@ public class WebScraper {
         }
         return null;
     }
+
     public HashMap<String, String> scrapeRooms(Document document) {
         HashMap<String, String> roomsHashMap = new HashMap<>();
         String id;
@@ -127,6 +128,7 @@ public class WebScraper {
         }
         return roomsHashMap;
     }
+
     public HashMap<String, String> scrapeTeacherNames(Document document) {
         HashMap<String, String> teacherNamesHashMap = new HashMap<>();
         String sign;
@@ -141,6 +143,7 @@ public class WebScraper {
         }
         return teacherNamesHashMap;
     }
+
     public Map<String, Integer> makeMonthConversionHashMap(){
         Map<String, Integer> map = new HashMap<>();
         map.put("jan", 1);
