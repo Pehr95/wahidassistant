@@ -276,6 +276,8 @@ input::placeholder {
   color: black;
   text-align: center;
 }
+input[name="upprepa_kod"] {
+}
 
 button.hidden {
   display: none;
