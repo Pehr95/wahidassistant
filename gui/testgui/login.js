@@ -19,12 +19,17 @@ document.addEventListener("DOMContentLoaded", function() {
         var username = document.querySelector('input[name="avnamn"]').value;
         var password = document.querySelector('input[name="kod"]').value;
 
+        console.log('username:', username);
+        console.log('password:', password);
+
         var loginData = {
             username: username,
             password: password
         };
 
-        fetch('http://localhost:8080/api/auth/authenticate', {
+        console.log(JSON.stringify(loginData));
+
+        fetch('http://localhost:8080/api/v1/auth/authenticate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -32,12 +37,14 @@ document.addEventListener("DOMContentLoaded", function() {
             body: JSON.stringify(loginData)
         })
         .then(response => {
+            console.log('response:', response);
             if (!response.ok) {
                 throw new Error('Inloggning misslyckades');
             }
             return response.json();
         })
         .then(data => {
+            console.log('data:', data);
             const token = data.token;
             localStorage.setItem('token', token);
 
