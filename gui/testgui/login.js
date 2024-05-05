@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
             password: password
         };
 
-        fetch('backend länk', {
+        fetch('http://localhost:8080/api/auth/authenticate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
