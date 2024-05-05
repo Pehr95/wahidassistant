@@ -1,19 +1,14 @@
 document.addEventListener("DOMContentLoaded", function() {
     var registerButton = document.querySelector('.register-button');
-    var loginButton = document.querySelector('button[type="submit"]:not(.register-button)');
     var upprepaKodInput = document.querySelector('input[name="upprepa_kod"]');
 
-    upprepaKodInput.style.display = "none";
+    upprepaKodInput.style.display = "none"; 
 
     registerButton.addEventListener("click", function(event) {
-        event.preventDefault(); 
+        event.preventDefault();
 
-        upprepaKodInput.style.display = "block";
-        loginButton.style.display = "none";
-    });
-
-    loginButton.addEventListener("click", function(event) {
-        upprepaKodInput.style.display = "none";
+        upprepaKodInput.style.display = "block"; 
+        upprepaKodInput.focus();
     });
 
     var loginForm = document.querySelector('form');
