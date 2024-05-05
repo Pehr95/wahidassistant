@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 
 @AllArgsConstructor
@@ -22,4 +23,14 @@ public class UserService {
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
+
+    public Optional<User> findByUsername(String username){
+        return userRepository.findByUsername(username);
+    }
+
+    public String getUserScheduleIdRef(String username){ //behöver spara det i databasen som en attribut som heter "scheduleIdRef"
+        return userRepository.findScheduleIdRefById(username);
+    }
+
+    //todo: skapa metod som säger den ska spara customEvents.
 }
