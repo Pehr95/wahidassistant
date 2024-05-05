@@ -30,4 +30,8 @@ public class Schedule {
     public String getUrl() {
         return url;
     }
+
+    public ArrayList<Event> getEvents() {
+        return events;
+    }
 }

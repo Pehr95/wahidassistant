@@ -31,5 +31,7 @@ public class ScheduleService {
         return null;
     }
 
+    public Optional<Schedule> getScheduleById(String id){return scheduleRepository.findById(id);}
+
 
 }
