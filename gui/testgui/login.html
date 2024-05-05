@@ -21,26 +21,6 @@
             <button type="submit" class="register-button">Registrera</button>
         </div>
     </form>
-
-    <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            var registerButton = document.querySelector('.register-button');
-            var loginButton = document.querySelector('button[type="submit"]:not(.register-button)');
-            var upprepaKodInput = document.querySelector('input[name="upprepa_kod"]');
-    
-            upprepaKodInput.style.display = "none";
-    
-            registerButton.addEventListener("click", function(event) {
-                event.preventDefault(); 
-              
-                upprepaKodInput.style.display = "block";
-                loginButton.classList.add('hidden');
-            });
-    
-            loginButton.addEventListener("click", function(event) {
-                upprepaKodInput.style.display = "none";
-            });
-        });
-    </script>
+    <script src="login.js"></script>
 </body>
 </html>

@@ -1,8 +1,9 @@
 @import url("https://fonts.googleapis.com/css2?family=Montserrat&family=Roboto:ital,wght@0,100;1,900&display=swap");
-{
-padding: 0;
-margin: 0;
-box-sizing: border-box;
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
 }
 
 html {
@@ -13,6 +14,10 @@ html {
 
 body {
   background: rgb(238, 236, 236);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .container {
@@ -28,11 +33,15 @@ body {
   margin: 0 auto;
   padding: 0 15px;
 }
-
+.schema {
+  max-height: 500px; 
+  overflow-y: auto;
+}
 .schema-item {
   background-color: #fff;
   border-radius: 5px;
   margin: 15px;
+  padding: 5px;
   box-shadow: 0 5px 10px rgb(0, 0, 0, 0.4);
   display: flex;
   align-items: center;
@@ -82,6 +91,36 @@ body {
   background: rgb(223, 0, 0);
 }
 
+
+.schema-item i.fa-book {
+  background-color: rgb(207, 43, 43);
+  color: white;
+  padding: 10px;
+  border-radius: 5px;
+  font-size: 24px;
+  width: 60px;
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 10px; 
+}
+
+.event-details {
+  display: none;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-top: none;
+}
+
+.event-details p {
+  margin: 0;
+}
+
+.hidden {
+  display: none;
+}
+
 .topnav {
   overflow: hidden;
   background-color: transparent;
@@ -90,6 +129,82 @@ body {
 
 .topnav #myLinks {
   display: none;
+}
+.popup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+  z-index: 1000;
+}
+
+.popup-content {
+  text-align: left;
+}
+
+.popup h2 {
+  margin-bottom: 10px;
+}
+
+.popup p {
+  margin-bottom: 5px;
+}
+
+.schema-item:hover .dropdown-content {
+  display: block;
+}
+
+.dropdown {
+  position: relative;
+  display: inline-block;
+  margin: 10px;
+}
+
+.select {
+  background-color: #f1f1f1;
+  border-radius: 5px;
+  padding: 10px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.select:hover {
+  background-color: #ddd;
+}
+
+.caret {
+  position: absolute;
+  top: 50%;
+  right: 10px;
+  transform: translateY(-50%);
+}
+
+.menu {
+  position: absolute;
+  background-color: #fff;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  border-radius: 5px;
+  list-style-type: none;
+  padding: 5px 0;
+  margin-top: 5px;
+  display: none;
+}
+
+.menu li {
+  padding: 10px;
+  cursor: pointer;
+}
+
+.menu li:hover {
+  background-color: #f4f4f4;
+}
+
+.dropdown:hover .menu {
+  display: block;
 }
 
 .topnav a {
@@ -115,11 +230,13 @@ body {
   color: white;
   border-radius: 5px;
 }
+
 button {
   background-color: #3174cd;
   color: white;
   padding: 14px 20px;
-  margin: 8px 0;
+  margin: 8px 
+
   border: none;
   cursor: pointer;
   width: 180px;
@@ -136,7 +253,6 @@ button:hover {
   display: flex;
   flex-direction: column;
   align-items: center;
-  
 }
 
 img {
@@ -160,6 +276,7 @@ input::placeholder {
   color: black;
   text-align: center;
 }
+
 button.hidden {
   display: none;
 }
