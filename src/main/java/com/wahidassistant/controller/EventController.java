@@ -19,4 +19,6 @@ public class EventController {
     public List<Event> fetchAllEvents() {
         return eventService.getAllEvents();
     }
+
+
 }

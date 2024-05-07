@@ -32,5 +32,7 @@ public class UserService {
         return userRepository.findScheduleIdRefById(username);
     }
 
-    //todo: skapa metod som säger den ska spara customEvents.
+
+
+    //todo: skapa metod som säger den ska spara customEvents.Efter attributen finns i databasen
 }
