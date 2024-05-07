@@ -31,12 +31,11 @@ public class Scheduler {
     }
 
     private boolean checkURLAndSchedule(Schedule schedule){
-        boolean confirmed = false;
         //todo: 1. Checka URL (Pehr), checka schemat (Pehr),
         //      2. KLARA! Checka om den finns i databasen och ersätt om den är gammal eller ny (Wahid & Amer),
         //      3. KLARA! Checka om det inte finns i databasen och lägg till i hela scheman databasen,
         //      4.
-        confirmed = updateSchedule(schedule);
+        boolean confirmed = updateSchedule(schedule);
 
         return confirmed;
     }

@@ -1,6 +1,7 @@
 package com.wahidassistant.controller;
 
 import com.wahidassistant.config.JwtService;
+import com.wahidassistant.model.Event;
 import com.wahidassistant.model.Schedule;
 import com.wahidassistant.service.ScheduleService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,7 +19,7 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
     private final JwtService jwtService;
 
-    @GetMapping
+    @GetMapping("/test")
     public List<Schedule> fetchAllSchedules() {
         return scheduleService.getAllSchedules();
     }
@@ -26,4 +27,6 @@ public class ScheduleController {
     public List<Schedule> fetchThisWeekEvents() {
         return scheduleService.getThisWeekEvents();
     }
+
+
 }
