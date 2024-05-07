@@ -65,12 +65,4 @@ public class User implements UserDetails {
         return true;
     }
 
-    public String getScheduleIdRef() {
-        return scheduleIdRef;
-    }
-
-    public void setCustomEvents(ArrayList<Event> customEvents) {
-        this.customEvents = customEvents;
-    }
-
 }

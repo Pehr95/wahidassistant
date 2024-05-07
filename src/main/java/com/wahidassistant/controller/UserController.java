@@ -23,7 +23,7 @@ public class UserController {
     private final UserService service;
     //private final UserRepository userRepository;
 
-    private final CustomEvents customEvents;
+    //private final CustomEvents customEvents;
 
     @GetMapping("/schedule")
     public List<String> fetchSchedule(HttpServletRequest request) {
@@ -63,8 +63,8 @@ public class UserController {
     public ResponseEntity<List<Event>> customEvents(HttpServletRequest request, @RequestBody List<Event> hiddenevents) {
         String username = getUsername(request);
         String scheduleIdRef = service.getUserScheduleIdRef(username);
-        List<Event> customEventList = customEvents.createCustomEvents(hiddenevents,scheduleIdRef);
-        service.createCustomEvents(customEventList); //todo: har inte skapats än
+        //List<Event> customEventList = customEvents.createCustomEvents(hiddenevents,scheduleIdRef);
+        //service.createCustomEvents(customEventList); //todo: har inte skapats än
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 }
