@@ -1,0 +1,35 @@
+@media screen and (max-width: 600px) {
+    .topnav a:not(:first-child) {
+        display: none;
+    }
+
+    .topnav a.icon {
+        float: right;
+        display: block;
+    }
+
+    .schema-item {
+        width: calc(100% - 20px);
+    }
+  }
+@media screen and (max-width: 600px) {
+    .loginpg {
+        width: 90%; 
+        margin-left: auto; 
+        margin-right: auto; 
+    }
+
+    input[type="text"],
+    input[type="password"],
+    button {
+        width: 100%; 
+        margin: 6px 0; 
+    }
+
+    img {
+        max-width: 100%; 
+        height: auto; 
+        margin-bottom: 20px; 
+        margin-top: 20px; 
+    }
+}

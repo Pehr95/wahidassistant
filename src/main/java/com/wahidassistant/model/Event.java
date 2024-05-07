@@ -32,12 +32,4 @@ public class Event {
         this.description = description;
         this.lastUpdated = lastUpdated;
     }
-
-    public String getCourseName() {
-        return courseName;
-    }
-
-    public Date getStartTime() {
-        return startTime;
-    }
 }
