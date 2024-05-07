@@ -13,4 +13,6 @@ public interface ScheduleRepository extends MongoRepository<Schedule, String> {
 
     @Query("{'events.eventDateTime': { $gte: ?0, $lt: ?1 }}")
     List<Schedule> findByEventsEventDateTimeBetween(LocalDateTime startOfDay, LocalDateTime startOfNextDay);
+
+    void deleteById(String id);
 }
