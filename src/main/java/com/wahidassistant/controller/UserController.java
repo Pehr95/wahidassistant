@@ -51,16 +51,4 @@ public class UserController {
         System.out.println(request);
         return jwtService.extractUsername(jwt);
     }
-
-    @PostMapping("/hidden-events")
-    public ResponseEntity<List<Event>> createHiddenEvents(@RequestBody List<Event> hiddenevents) {
-        String username = userController.getUsername(r)
-
-        String scheduleIdRef = userService.getUserScheduleIdRef()
-
-
-
-        userService.createCustomEvents(customEvents); //har inte skapats än
-        return new ResponseEntity<>(createdEvents, HttpStatus.CREATED);
-    }
 }
