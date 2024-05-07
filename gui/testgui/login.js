@@ -1,19 +1,14 @@
 document.addEventListener("DOMContentLoaded", function() {
     var registerButton = document.querySelector('.register-button');
-    var loginButton = document.querySelector('button[type="submit"]:not(.register-button)');
     var upprepaKodInput = document.querySelector('input[name="upprepa_kod"]');
 
-    upprepaKodInput.style.display = "none";
+    upprepaKodInput.style.display = "none"; 
 
     registerButton.addEventListener("click", function(event) {
-        event.preventDefault(); 
+        event.preventDefault();
 
-        upprepaKodInput.style.display = "block";
-        loginButton.style.display = "none";
-    });
-
-    loginButton.addEventListener("click", function(event) {
-        upprepaKodInput.style.display = "none";
+        upprepaKodInput.style.display = "block"; 
+        upprepaKodInput.focus();
     });
 
     var loginForm = document.querySelector('form');
@@ -24,12 +19,17 @@ document.addEventListener("DOMContentLoaded", function() {
         var username = document.querySelector('input[name="avnamn"]').value;
         var password = document.querySelector('input[name="kod"]').value;
 
+        console.log('username:', username);
+        console.log('password:', password);
+
         var loginData = {
             username: username,
             password: password
         };
 
-        fetch('backend länk', {
+        console.log(JSON.stringify(loginData));
+
+        fetch('http://localhost:8080/api/v1/auth/authenticate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -37,12 +37,14 @@ document.addEventListener("DOMContentLoaded", function() {
             body: JSON.stringify(loginData)
         })
         .then(response => {
+            console.log('response:', response);
             if (!response.ok) {
                 throw new Error('Inloggning misslyckades');
             }
             return response.json();
         })
         .then(data => {
+            console.log('data:', data);
             const token = data.token;
             localStorage.setItem('token', token);
 
