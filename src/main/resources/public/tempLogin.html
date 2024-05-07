@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Login Page</title>
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+        background-color: #3174cd; /* Blue background color */
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+    }
+
+    .formContainer {
+        background-color: #fff; /* White background color */
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+        text-align: center;
+    }
+
+    h2 {
+        color: #3498db; /* Blue text color */
+        margin-top: 0;
+    }
+
+    input[type="text"],
+    input[type="password"] {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 5px;
+        box-sizing: border-box;
+    }
+
+    button {
+        width: 100%;
+        padding: 10px;
+        margin: 10px 0;
+        border: none;
+        border-radius: 5px;
+        background-color: #3174cd; /* Blue button color */
+        color: #fff; /* White text color */
+        cursor: pointer;
+        transition: background-color 0.3s;
+    }
+
+    button:hover {
+        background-color: #2c68b8; /* Darker blue color on hover */
+    }
+
+    .hidden {
+        display: none;
+    }
+
+    .logo {
+        width: 300px; /* Adjust size as needed */
+        margin-bottom: 20px; /* Add space between logo and form */
+    }
+</style>
+</head>
+<body>
+
+<div id="loginContainer" class="formContainer">
+    <img src="icon-logo.png" alt="Logo" class="logo">
+    <h2>Login</h2>
+    <form id="login">
+        <input type="text" id="username" name="username" placeholder="Username" required><br>
+        <input type="password" id="password" name="password" placeholder="Password" required><br>
+        <button type="submit">Login</button>
+    </form>
+    <button id="registerBtn">Register</button>
+</div>
+
+<div id="registerForm" class="formContainer hidden">
+    <img src="icon-logo.png" alt="Logo" class="logo">
+    <h2>Register</h2>
+    <form id="register">
+        <input type="text" id="newUsername" name="newUsername" placeholder="Username" required><br>
+        <input type="password" id="newPassword" name="newPassword" placeholder="Password" required><br>
+        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required><br>
+        <button type="submit">Register</button>
+    </form>
+</div>
+
+<script>
+    const loginForm = document.getElementById("loginContainer");
+    const registerForm = document.getElementById("registerForm");
+    const registerBtn = document.getElementById("registerBtn");
+
+    function login(username, password) {
+        // Make a request to authenticate endpoint
+        fetch('http://localhost:8080/api/v1/auth/authenticate', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username: username, password: password })
+        })
+        .then(response => {
+            // Handle response
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Login failed');
+            }
+        })
+        .then(data => {
+            const jwt = data.token;
+            alert('JWT: ' + jwt); // Display JWT in a popup
+            // Redirect or show success message
+            document.cookie = `auth_token=${jwt}; path=/`;
+            window.location.href = 'index.html';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Show error message
+        });
+    }
+
+    function register(username, password) {
+        // Make a request to register endpoint
+        fetch('http://localhost:8080/api/v1/auth/register', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ username: username, password: password })
+        })
+        .then(response => {
+            // Handle response
+            if (response.ok) {
+                return response.json();
+            } else {
+                throw new Error('Registration failed');
+            }
+        })
+        .then(data => {
+            const jwt = data.token;
+            alert('JWT: ' + jwt); // Display JWT in a popup
+            // Redirect or show success message
+            window.location.href = 'settings.html';
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            // Show error message
+        });
+    }
+
+    registerBtn.addEventListener("click", function() {
+        loginForm.classList.add("hidden");
+        registerForm.classList.remove("hidden");
+    });
+
+    document.getElementById("login").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const username = document.getElementById("username").value;
+        const password = document.getElementById("password").value;
+        login(username, password);
+    });
+
+    document.getElementById("register").addEventListener("submit", function(event) {
+        event.preventDefault();
+        const username = document.getElementById("newUsername").value;
+        const password = document.getElementById("newPassword").value;
+        const confirmPassword = document.getElementById("confirmPassword").value;
+        if (password !== confirmPassword) {
+            console.error('Passwords do not match');
+            // Show error message
+            return;
+        }
+        register(username, password);
+    });
+</script>
+
+</body>
+</html>
