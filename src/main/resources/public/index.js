@@ -1,16 +1,11 @@
 
-//document.addEventListener('DOMContentLoaded', fetchEvents());
-
 window.onload = fetchEvents();
 
 
 async function fetchEvents() {
-
-
-
     try {
         console.log("hej: " + document.cookie);
-        const response = await fetch('http://localhost:8080/api/v1/schedules/all', {method: 'GET', headers: {'Authorization': 'Bearer ' + getAuthToken()}});
+        const response = await fetch('http://192.168.1.70:8080/api/v1/schedules/all', {method: 'GET', headers: {'Authorization': 'Bearer ' + getAuthToken()}});
         const schedules = await response.json();
         console.log("ok");
         const schedule = schedules[0];
@@ -63,7 +58,7 @@ function displayEvents(events) {
 
 
         const infoHeader = document.createElement('h5');
-        infoHeader.textContent = convertToSwedishTime(event.startTime) + "-" + convertToSwedishTime(event.endTime) + ", " + extractCourseName(event.courseName);
+        infoHeader.textContent = convertToSwedishTime(event.startTime) + "-" + convertToSwedishTime(event.endTime) + ", " + event.courseName;
         infoTextDiv.appendChild(infoHeader);
 
         const infoRooms = document.createElement('p');
@@ -77,22 +72,10 @@ function displayEvents(events) {
 
     });
 
-
     function convertToSwedishTime(utcTimeString) {
         const utcDate = new Date(utcTimeString);
         const swedishTime = utcDate.toLocaleString('sv-SE', { timeZone: 'Europe/Stockholm', hour12: false });
         return swedishTime.substring(11, 16);
     }
 
-    function extractCourseName(inputString) {
-        const regex = /^(.*?), \d+(?:.\d+)? hp/; // This regex captures everything before " d hp "
-        const match = inputString.match(regex);
-        
-        if (match) {
-            const courseName = match[1].trim();
-            return courseName;
-        } else {
-            return "No match found.";
-        }
-    }
 }
