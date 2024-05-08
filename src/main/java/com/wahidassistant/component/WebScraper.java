@@ -14,6 +14,8 @@ import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @Component
 public class WebScraper {
@@ -66,7 +68,7 @@ public class WebScraper {
 
                 // Course name
                 if (!row.select("td.commonCell:nth-of-type(5) a").isEmpty()){
-                    courseName = row.select("td.commonCell:nth-of-type(5) a").get(0).text();
+                    courseName = extractCourseName(row.select("td.commonCell:nth-of-type(5) a").get(0).text());
                 }
 
                 // Teacher codes to names
@@ -103,6 +105,18 @@ public class WebScraper {
             }
         }
         return new Schedule(url, events);
+    }
+
+    public static String extractCourseName(String inputString) {
+        String regex = "^(.*?), \\d+(?:\\.\\d+)? hp"; // This regex captures everything before " {digit} hp "
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(inputString);
+
+        if (matcher.find()) {
+            return matcher.group(1).trim();
+        } else {
+            return "No match found.";
+        }
     }
 
     private Document fetchDocument(String url) {
