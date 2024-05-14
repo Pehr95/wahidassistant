@@ -5,44 +5,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Min webbsida med rutor</title>
-    <link rel="stylesheet" href="styles.css">
+
 </head>
 <body>
-    <div class="container">
-      
-        <div class="button-container">
-           
-            <img class="icon-pic" src="a.jpeg">
-           
-            <label class="button">
-                <input type="radio" name="option" value="buss">Buss
-            </label>
-            <label class="button">
-                <input type="radio" name="option" value="bike">Bike
-            </label>
-            <label class="button">
-                <input type="radio" name="option" value="both">Buss & Bike
-            </label>
-        </div>
-        <div class="box">
-            <img class="icon-pic" src="a.jpeg">
-            <P class ="urltext">Enter URL</P>
-            <input type="text" placeholder="URL" name="search">
-        </div>
-        <div class="box">
-            <img class="icon-pic" src="a.jpeg">
+<div class="container">
+
+    <div class="button-container">
+
+        <img class="icon-pic" src="a.jpeg">
+
+        <label class="button">
+            <input type="radio" name="option" value="buss">Buss
+        </label>
+        <label class="button">
+            <input type="radio" name="option" value="bike">Bike
+        </label>
+        <label class="button">
+            <input type="radio" name="option" value="both">Buss & Bike
+        </label>
+        <label class="button">
+            <input type="radio" name="option" value="none">None
+        </label>
+    </div>
+    <div class="box">
+        <img class="icon-pic" src="a.jpeg">
+        <P class ="urltext">Enter URL</P>
+        <input type="text" id="urlInput" placeholder="URL" name="url">
+    </div>
+    <div class="box">
+        <img class="icon-pic" src="a.jpeg">
         <div class ="urltext">
             <P class=" adresstext">Enter Adress</P>
         </div>
-            <input type="text" placeholder="Adress" name="search">
-        </div>
-    
-       
-            <button class ="signout">Sign out </button>
-            <button class ="delete"> Delete account </button>
-
-
-        
+        <input type="text" id="addressInput" placeholder="Address" name="address">
     </div>
+    <div>
+        <button class="save" id="saveButton">Save</button>
+    </div>
+</div>
+<button class ="signout">Sign out </button>
+</div>
+</div>
+<button class ="delete"> Delete account </button>
+</div>
+</div>
+<script src="settings.js.js"></script>
 </body>
 </html>
