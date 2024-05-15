@@ -107,20 +107,8 @@ header button{
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-#iconBox0 {
-    background-color: hsl(97, 90%, 35%);
-}
-
-.iconContainer {
     background-color: hsla(219, 100%, 70%);
 }
-
-#iconBox2 {
-    background-color: hsl(0, 100%, 70%);
-}
-
 
 /* Style for the popup */
 .popUp {
