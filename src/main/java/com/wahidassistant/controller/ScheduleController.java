@@ -19,7 +19,7 @@ public class ScheduleController {
     private final ScheduleService scheduleService;
     private final JwtService jwtService;
 
-    @GetMapping("/test")
+    @GetMapping("/all")
     public List<Schedule> fetchAllSchedules() {
         return scheduleService.getAllSchedules();
     }

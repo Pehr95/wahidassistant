@@ -3,32 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Styled HTML Page</title>
-    <style>
-        /* CSS styling */
-        body {
-            font-family: Arial, sans-serif;
-        }
-        .container {
-            text-align: center;
-            margin-top: 50px;
-        }
-        h1 {
-            color: #007bff;
-        }
-    </style>
+    <title>Your Schedule</title>
+    <link rel="stylesheet" href="index.css">
+    <script src="https://kit.fontawesome.com/ede42c66d1.js" crossorigin="anonymous"></script>
+    <script src="index.js"></script>
 </head>
 <body>
-<div class="container">
-    <h1>Welcome to my styled HTML page!</h1>
-    <button id="myButton">Click me</button>
-</div>
+    <header><h3 id="day">Måndag 5/2</h3><button><i class="fa-solid fa-gear fa-xl" style="color: #000000;"></i></button></header>
 
-<script>
-    // JavaScript code
-    document.getElementById("myButton").addEventListener("click", function() {
-        alert("Button clicked!");
-    });
-</script>
+    <div id="scheduleContainer">
+
+    </div>
+
 </body>
 </html>
