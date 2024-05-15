@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Popup Example</title>
+<style>
+    /* Style for the div */
+    .info {
+        background-color: #f0f0f0;
+        padding: 10px;
+        margin: 10px;
+        cursor: pointer;
+    }
+
+    /* Style for the popup */
+    .popup {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        width: 80%;
+        height: 50%;
+        transform: translate(-50%, -50%);
+        background-color: white;
+        padding: 20px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+        z-index: 9999;
+        overflow: auto; /* Add scrollbars if content overflows */
+        scrollbar-width: none; /* Hide scrollbar for Firefox */
+        -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+    }
+
+    /* Style for the close button */
+    .popup-close {
+        position: absolute;
+        top: 5px;
+        right: 5px;
+        cursor: pointer;
+    }
+</style>
+</head>
+<body>
+
+<!-- The div with short info -->
+<div class="info" onclick="showPopup()">
+    Short Info
+</div>
+
+<!-- The popup with more detailed info -->
+<div id="popup" class="popup">
+    <h2>Detailed Info</h2>
+    <p>This is the detailed information that you want to display.</p>
+    <p>This is the detailed information that you want to display.</p>
+    <p>This is the detailed information that you want to display.</p>
+    <p>This is the detailed information that you want to display.</p>
+    <p>This is the detailed information that you want to display.</p>
+    <p>This is the detailed information that you want to display.</p>
+    <p>This is the detailed information that you want to display.</p>
+    <p>This is the detailed information that you want to display.</p>
+    <p>This is the detailed information that you want to display.</p>
+    <p>This is the detailed information that you want to display.</p>
+    <p>This is the detailed information that you want to display.</p>
+    <p>This is the detailed information that you want to display.</p>
+    <p>This is the detailed information that you want to display.</p>
+</div>
+
+<script>
+    // Function to show the popup
+    function showPopup() {
+        var popup = document.getElementById("popup");
+        popup.style.display = "block";
+        // Delay adding the event listener to close the popup when clicked outside
+        setTimeout(function() {
+            document.addEventListener('click', closePopupOutside);
+        }, 100);
+    }
+
+    // Function to close the popup
+    function closePopup() {
+        var popup = document.getElementById("popup");
+        popup.style.display = "none";
+        // Remove event listener when popup is closed
+        document.removeEventListener('click', closePopupOutside);
+    }
+
+    // Function to close the popup when clicked outside
+    function closePopupOutside(clickEvent) {
+        var popup = document.getElementById("popup");
+        // Check if the click target is not the popup or its children
+        if (!popup.contains(clickEvent.target)) {
+            popup.style.display = "none";
+            // Remove event listener if popup is closed
+            document.removeEventListener('click', closePopupOutside);
+        }
+    }
+</script>
+
+</body>
+</html>

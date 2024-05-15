@@ -9,10 +9,7 @@ import java.util.Date;
 import java.util.HashMap;
 
 @Data
-@Document
 public class Event {
-    @Id
-    private String id;
     private String courseName;
     private Date startTime;
     private Date endTime;

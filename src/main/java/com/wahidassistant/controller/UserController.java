@@ -1,8 +1,9 @@
 package com.wahidassistant.controller;
 
-import com.wahidassistant.component.CustomEvents;
 import com.wahidassistant.config.JwtService;
 import com.wahidassistant.model.Event;
+import com.wahidassistant.model.SettingsData;
+import com.wahidassistant.model.User;
 import com.wahidassistant.repository.UserRepository;
 import com.wahidassistant.service.ScheduleService;
 import com.wahidassistant.service.UserService;
@@ -13,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("api/v1/user")
@@ -21,7 +23,7 @@ public class UserController {
     private final ScheduleService scheduleService;
     private final JwtService jwtService;
     private final UserService service;
-    //private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
     //private final CustomEvents customEvents;
 
@@ -41,8 +43,13 @@ public class UserController {
     }
 
     @PostMapping("/settings")
-    public String changeSettings(HttpServletRequest request) {
-        getUsername(request);
+    public String changeSettings(HttpServletRequest request, @RequestBody SettingsData settingsData) {
+        String name = getUsername(request);
+        Optional<User> user  = service.findByUsername(name);
+        User user1 = user.get();
+        user1.setSettingsData(settingsData);
+        userRepository.save(user1);
+
         return "Settings changed";
     }
 

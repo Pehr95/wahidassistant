@@ -1,0 +1,161 @@
+.container {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    height: 50vh;
+    justify-content: space-between; /* Distribute items evenly with space between them */
+    margin-top: 100px; /* Add space from the top */
+    margin-bottom: 200px;
+    margin-left: 10px;
+    margin-right: 10px;
+   
+}
+
+.box {
+    flex: 1;
+    background-color: #f0f0f0;
+    border: 1px solid #ccc;
+    text-align: center;
+    line-height: 50px;
+    border-radius: 30px;
+    margin-bottom: 10px;
+    height: 50%; /* Ändra höjden på diven */
+   
+
+
+
+}
+
+
+
+.button {
+            display:inline-table;
+            padding: 10px 20px;
+            color: black;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            text-decoration: none;
+            
+            
+                        
+        }
+
+          .button-container {
+            text-align: center;
+            flex: 1;
+            background-color: #f0f0f0;
+            border: 1px solid #ccc;
+            text-align: center;
+            border-radius: 30px;
+            margin-bottom: 10px;
+            display: felx;            
+            flex-direction: column;
+            align-items: center;
+            font-size: large;
+            
+
+          
+            
+            
+            
+        }
+      
+        .button::before {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 1px solid #ccc;
+            border-radius: 50%;
+            position: absolute;
+            left: -30px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: #fff;
+        }
+        .button-text {
+            margin-left: 10px;
+        }
+        .button:hover {
+            background-color: #e0e0e0;
+        }
+        .text{
+            display: inline-flex;
+            align-items: center;
+            margin-right: 20px;
+        }
+     
+
+        .icon-pic {
+           /* width: 30%; /* Make the image take the whole width of its container */
+            
+            border-radius: 10px 10px 10px 10px;
+            
+            width: 20%;
+            height:100%;
+
+    
+            float: left;
+            
+        }
+       
+        .delete{
+            display: flex;
+            position: absolute;
+            background-color: red;
+            border-radius: 10px;
+            font-size: large;
+            color: white;
+            height: 50px;
+            left: 48%;
+            top:75%;
+
+
+
+        }
+        .signout{
+            display: flex;
+            position: absolute;
+            background-color: red;
+            border-radius: 10px;
+            font-size: large;
+            margin-top: 5%;
+            color: white;
+            height: 50px;
+            left: 48%;
+
+
+
+        }
+        .adresstext {
+
+            line-height: 1; /* or adjust as needed */
+
+        }
+        .urltext{
+            line-height: 1; /* or adjust as needed */
+
+        }
+        .save{
+            display: flex;
+            position: absolute;
+            left: 50%;
+            height: 40px;
+            font-size: large;
+            margin-top: 50px;
+
+
+
+            background-color: #03bc03;
+            border-radius: 10px;
+        }
+       
+
+
+
+@media only screen and (max-width: 600px) {
+    .box {
+        line-height: 50px; 
+    }
+}

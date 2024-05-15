@@ -1,9 +1,6 @@
 package com.wahidassistant.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.security.core.GrantedAuthority;
@@ -29,6 +26,7 @@ public class User implements UserDetails {
     private String scheduleIdRef;
     private ArrayList<Event> customEvents;
     private ArrayList<Event> hiddenEvents;
+    private SettingsData settingsData;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
