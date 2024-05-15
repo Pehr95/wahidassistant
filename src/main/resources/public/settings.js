@@ -19,7 +19,8 @@ document.addEventListener("DOMContentLoaded", function() {
         fetch("http://localhost:8080/api/v1/user/settings", {
             method: "POST",
             headers: {
-                "Content-Type": "application/json"
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + getAuthToken()
             },
             body: JSON.stringify(data)
         })
@@ -37,6 +38,18 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 
+    function getAuthToken() {
+        const cookies = document.cookie.split(';').map(cookie => cookie.trim());
+        for (const cookie of cookies) {
+            const [name, value] = cookie.split('=');
+            if (name === 'auth_token') {
+                console.log('Found auth token:', value)
+                return value;
+            }
+        }
+        console.log('No auth token found.')
+        return null; // Return null if token is not found
+    }
 
 
 });

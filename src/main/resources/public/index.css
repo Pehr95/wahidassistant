@@ -1,4 +1,5 @@
 body {
+    padding-top: 100px;
     font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif;
     background-color: hsl(0, 0%, 95%);
     margin: 0;
@@ -10,14 +11,25 @@ header {
     justify-content: space-between;
     align-items: center;
     font-family: 'Courier', monospace;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000; /* Ensure it's above other content */
+    background-color: hsl(0, 0%, 95%);
 }
 
-header h3{
+
+header #logo{
     margin: 0;
     margin-left: 20px;
-    font-size: 1.75em;
-    font-weight: normal;
+    width: 15em;
+}
 
+header #menu{
+    margin: 0;
+    width: 1.5em;
 }
 
 header button{
@@ -32,9 +44,18 @@ header button{
     -webkit-tap-highlight-color: transparent;
 }
 
+.dayContainer h3 {
+    font-family: 'Courier', monospace;
+    margin: 0;
+    margin-left: 15px;
+    margin-top: 15px;
+    font-size: 1.5em;
+    font-weight: normal;
+}
+
 .eventContainer {
     display: flex;
-    margin-bottom: 12px;
+    margin-top: 12px;
     margin-left: 7px;
     margin-right: 7px;
     border-radius: 10px;
@@ -46,6 +67,7 @@ header button{
     /*height: 70px; /* Set initial height */
     -webkit-tap-highlight-color: transparent;
 }
+
 
 
 
@@ -85,16 +107,56 @@ header button{
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-#iconBox0 {
-    background-color: hsl(97, 90%, 35%);
-}
-
-.iconContainer {
     background-color: hsla(219, 100%, 70%);
 }
 
-#iconBox2 {
-    background-color: hsl(0, 100%, 70%);
+/* Style for the popup */
+.popUp {
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 85%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    z-index: 9999;
+    overflow: auto; /* Add scrollbars if content overflows */
+    scrollbar-width: none; /* Hide scrollbar for Firefox */
+    -ms-overflow-style: none; /* Hide scrollbar for IE/Edge */
+}
+
+.popUp h4 {
+    margin: 0px;
+    text-align: center;
+    font-size: 1em;
+}
+
+.popUp p {
+    font-size: 0.8em;
+}
+
+
+/* Define the color for the link */
+.popUp a {
+    color: blue;
+    text-decoration: none; /* Remove the underline */
+}
+
+/* Define the color for the link when it's visited */
+.popUp a:visited {
+    color: blue;
+}
+
+/* Define the color for the link when it's hovered */
+.popUp a:hover {
+    color: green;
+}
+
+/* Define the color for the link when it's active (pressed) */
+a:active {
+    color: blue; /* You can set it to the same color as the normal state */
 }

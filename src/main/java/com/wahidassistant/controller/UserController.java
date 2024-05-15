@@ -4,6 +4,7 @@ import com.wahidassistant.config.JwtService;
 import com.wahidassistant.model.Event;
 import com.wahidassistant.model.SettingsData;
 import com.wahidassistant.model.User;
+import com.wahidassistant.repository.UserRepository;
 import com.wahidassistant.service.ScheduleService;
 import com.wahidassistant.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
@@ -22,7 +23,7 @@ public class UserController {
     private final ScheduleService scheduleService;
     private final JwtService jwtService;
     private final UserService service;
-    //private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
     //private final CustomEvents customEvents;
 
@@ -47,7 +48,7 @@ public class UserController {
         Optional<User> user  = service.findByUsername(name);
         User user1 = user.get();
         user1.setSettingsData(settingsData);
-
+        userRepository.save(user1);
 
         return "Settings changed";
     }
