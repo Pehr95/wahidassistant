@@ -9,5 +9,4 @@ public class SettingsData {
     private String option;
     private String url;
     private String address;
-    //hejhej
 }

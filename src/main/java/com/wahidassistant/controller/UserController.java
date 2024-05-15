@@ -52,6 +52,16 @@ public class UserController {
 
         return "Settings changed";
     }
+    @GetMapping("/settings")
+    public SettingsData changeSettings(HttpServletRequest request) {
+        String name = getUsername(request);
+        Optional<User> user  = service.findByUsername(name);
+        User user1 = user.get();
+        System.out.println(user1.getSettingsData());
+
+
+        return user1.getSettingsData();
+    }
 
     @GetMapping("/get-username")
     public String showUsername(HttpServletRequest request) {

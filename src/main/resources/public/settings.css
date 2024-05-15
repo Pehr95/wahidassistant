@@ -1,25 +1,83 @@
-.container {
+body {
+    padding-top: 25px;
+    font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif;
+    background-color: hsl(0, 0%, 95%);
+    margin: 0;
+}
+.header{
+    margin-bottom: 25px;
+    font-size: 20px;
+    margin-left: 10PX;
+    font-weight: bold
+    
+    
+
+    
+}
+#addressInput {
+    width: 300px; 
+    padding: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    font-size: 16px; 
+    margin-bottom: 10px; 
+  }
+  
+  #addressInput::placeholder {
+    
+    color: #999; 
+    font-style: italic; 
+  }
+  #urlInput {
+   
+    width: 300px; 
+    padding: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    font-size: 16px; 
+    margin-bottom: 10px; 
+  }
+  
+  #urlInput::placeholder {
+    /* Style the placeholder text */
+    color: #999; /* Example placeholder text color */
+    font-style: italic; /* Example placeholder font style */
+  }
+
+
+/*.container {
     display: flex;
     flex: 1;
     flex-direction: column;
     height: 50vh;
-    justify-content: space-between; /* Distribute items evenly with space between them */
-    margin-top: 100px; /* Add space from the top */
+    justify-content: space-between;
     margin-bottom: 200px;
     margin-left: 10px;
     margin-right: 10px;
    
-}
+} */
 
 .box {
-    flex: 1;
+   /* flex: 1;
     background-color: #f0f0f0;
     border: 1px solid #ccc;
     text-align: center;
     line-height: 50px;
     border-radius: 30px;
     margin-bottom: 10px;
-    height: 50%; /* Ändra höjden på diven */
+    height: 50%; */
+    display: flex;
+    margin-top: 12px;
+    margin-left: 7px;
+    margin-right: 7px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    background-color: hsl(0, 0%, 100%);
+    overflow: hidden;
+    transition: height 0.4s ease; /* Use height property for smooth transition */
+    cursor: pointer;
+    /*height: 70px; /* Set initial height */
+    -webkit-tap-highlight-color: transparent;
    
 
 
@@ -29,20 +87,21 @@
 
 
 .button {
-            display:inline-table;
+         /*   display:inline-table;
             padding: 10px 20px;
             color: black;
             border: none;
             border-radius: 4px;
             cursor: pointer;
             text-decoration: none;
+            */
             
             
                         
         }
 
           .button-container {
-            text-align: center;
+            /*text-align: center;
             flex: 1;
             background-color: #f0f0f0;
             border: 1px solid #ccc;
@@ -52,7 +111,19 @@
             display: felx;            
             flex-direction: column;
             align-items: center;
-            font-size: large;
+            font-size: large;*/
+            display: flex;
+            margin-top: 12px;
+            margin-left: 7px;
+            margin-right: 7px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: hsl(0, 0%, 100%);
+            overflow: hidden;
+            transition: height 0.4s ease; /* Use height property for smooth transition */
+            cursor: pointer;
+            /*height: 70px; /* Set initial height */
+            -webkit-tap-highlight-color: transparent;
             
 
           
@@ -60,9 +131,24 @@
             
             
         }
+
+        .iconContainer {
+            padding: 20px;
+            border-radius: 10px;
+            width: 15px;
+            height: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: rgb(90, 141, 236);
+         }
+        .icon-pic{
+            width: 50px;
+            height: 50px;
+        }
       
         .button::before {
-            content: '';
+         /*   content: '';
             display: inline-block;
             width: 20px;
             height: 20px;
@@ -73,6 +159,7 @@
             top: 50%;
             transform: translateY(-50%);
             background-color: #fff;
+            */
         }
         .button-text {
             margin-left: 10px;
@@ -80,15 +167,11 @@
         .button:hover {
             background-color: #e0e0e0;
         }
-        .text{
-            display: inline-flex;
-            align-items: center;
-            margin-right: 20px;
-        }
+       
      
 
         .icon-pic {
-           /* width: 30%; /* Make the image take the whole width of its container */
+           /*
             
             border-radius: 10px 10px 10px 10px;
             
@@ -96,12 +179,12 @@
             height:100%;
 
     
-            float: left;
+            float: left;*/
             
         }
        
         .delete{
-            display: flex;
+         /*   display: flex;
             position: absolute;
             background-color: red;
             border-radius: 10px;
@@ -112,10 +195,10 @@
             top:75%;
 
 
-
+*/
         }
         .signout{
-            display: flex;
+         /*   display: flex;
             position: absolute;
             background-color: red;
             border-radius: 10px;
@@ -126,36 +209,37 @@
             left: 48%;
 
 
-
+*/
         }
-        .adresstext {
-
-            line-height: 1; /* or adjust as needed */
-
-        }
-        .urltext{
-            line-height: 1; /* or adjust as needed */
-
-        }
+      
         .save{
-            display: flex;
-            position: absolute;
-            left: 50%;
-            height: 40px;
-            font-size: large;
-            margin-top: 50px;
+            padding: 10px 20px; /* Example padding */
+            background-color: #4CAF50; /* Example background color */
+            color: white; /* Example text color */
+            border:#ccc;
+            border-radius: 5px; /* Example border radius */
+            cursor: pointer; /* Show pointer cursor on hover */
+            font-size: 20px;
+            display: block; /* Sätt knappen till blockelement */
+            margin: 20px auto;
 
-
-
-            background-color: #03bc03;
-            border-radius: 10px;
+            
         }
+        .textConteiner{
+            margin-left: 10px;
+
+        }
+        .textConteinerButton{
+            margin-left: 10px;
+        }
+      
+       
        
 
 
 
 @media only screen and (max-width: 600px) {
     .box {
-        line-height: 50px; 
+        line-height: 5px; 
     }
 }

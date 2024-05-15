@@ -2,54 +2,58 @@
 <html lang="sv">
 <head>
     <link rel = "stylesheet" href="settings.css">
-    <script src="settings.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Min webbsida med rutor</title>
+    <header class ="header"> INSTÄLLNINGAR</header>
 
 </head>
 <body>
 <div class="container">
 
     <div class="button-container">
-
-        <img class="icon-pic" src="bus-solid.png">
-
-        <label class="button">
-            <input type="radio" name="option" value="buss">Busssss
-        </label>
-        <label class="button">
-            <input type="radio" name="option" value="bike">Bike
-        </label>
-        <label class="button">
-            <input type="radio" name="option" value="both">Buss & Bike
-        </label>
-        <label class="button">
-            <input type="radio" name="option" value="none">None
-        </label>
+        <div class ="iconContainer">
+            <img class="icon-pic" src="bus-solid.png">
+        </div>
+        <div class="textConteinerButton">
+            <p> Choose Transportation</p>
+            <label class="button">
+                <input type="radio" name="option" value="buss">Bus
+            </label>
+            <label class="button">
+                <input type="radio" name="option" value="bike">Bike
+            </label>
+            <label class="button">
+                <input type="radio" name="option" value="none">None
+            </label>
+        </div>
+      
     </div>
     <div class="box">
-        <img class="icon-pic" src="link-solid.png">
+        <div class ="iconContainer"><img class="icon-pic" src="link-solid.png"></div>
+        <div class="textConteiner">
         <P class ="urltext">Enter URL</P>
         <input type="text" id="urlInput" placeholder="URL" name="url">
+        </div>
     </div>
     <div class="box">
-        <img class="icon-pic" src="house-solid.png">
-        <div class ="urltext">
-            <P class=" adresstext">Enter Adress</P>
+        <div class ="iconContainer"> <img class="icon-pic" src="house-solid.png"></div>
+        <div class="textConteiner">
+            <P class="adresstext">Enter Adress</P>
+            <input type="text" id="addressInput" placeholder="Address" name="address">
+
         </div>
-        <input type="text" id="addressInput" placeholder="Address" name="address">
     </div>
     <div>
-        <button class="save" id="saveButton">Save</button>
+        <button class="save" id="saveButton">Spara uppgifter</button>
     </div>
 </div>
-<button class ="signout">Sign out </button>
+    <!--<button class ="signout">Sign out </button>-->
 </div>
 </div>
-<button class ="delete"> Delete account </button>
+    <!--<button class ="delete"> Delete account </button>-->
 </div>
 </div>
-
+<script src="settings.js"></script>
 </body>
 </html>
