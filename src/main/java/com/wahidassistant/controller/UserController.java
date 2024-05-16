@@ -74,4 +74,6 @@ public class UserController {
         //service.createCustomEvents(customEventList); //todo: har inte skapats än
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
+
+
 }

@@ -10,4 +10,6 @@ public class SettingsData {
     private String url;
     private String address;
     //hejhej
+
+    //settings preffered time in minutes
 }

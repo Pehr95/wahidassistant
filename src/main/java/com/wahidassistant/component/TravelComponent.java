@@ -2,22 +2,19 @@ package com.wahidassistant.component;
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
 import com.google.maps.model.*;
-import com.wahidassistant.model.BusEvent;
 import com.wahidassistant.model.BusTrip;
-import com.wahidassistant.model.Event;
-import com.wahidassistant.model.User;
 import org.jetbrains.annotations.NotNull;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 
-public class TravelService {
+public class TravelComponent {
     private final GeoApiContext context;
 
     String apiKey = "AIzaSyANvrEPWoFWNrnB4rHNBhEVy9Wgs43nc80";
 
-    public TravelService() {
+    public TravelComponent() {
         context = new GeoApiContext.Builder().apiKey(apiKey).build();
     }
 
@@ -94,6 +91,8 @@ public class TravelService {
         }
         return totalTravelTime;
     }
+
+
 
     //todo: Få ut första dagens event, få ut eventets tid, skapa bus event och lägg in i mongodb som BusEvent innan eventet i personliga schedule.
     /*

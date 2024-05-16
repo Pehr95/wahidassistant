@@ -15,4 +15,6 @@ public interface ScheduleRepository extends MongoRepository<Schedule, String> {
     List<Schedule> findByEventsEventDateTimeBetween(LocalDateTime startOfDay, LocalDateTime startOfNextDay);
 
     void deleteById(String id);
+
+
 }

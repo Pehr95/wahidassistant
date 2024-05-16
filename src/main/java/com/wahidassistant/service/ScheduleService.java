@@ -33,5 +33,16 @@ public class ScheduleService {
 
     public Optional<Schedule> getScheduleById(String id){return scheduleRepository.findById(id);}
 
-
+    public boolean updateSchedule(Schedule updatedSchedule) {
+        boolean confirmed = false;
+        Optional<Schedule> scheduleOptional = scheduleRepository.findScheduleByUrl(updatedSchedule.getUrl());
+        String id = "";
+        if(scheduleOptional.isPresent()){
+            Schedule schedule = scheduleOptional.get();
+            schedule.setEvents(updatedSchedule.getEvents());
+            scheduleRepository.save(schedule);
+            confirmed = true;
+        }
+        return confirmed;
+    }
 }
