@@ -1,9 +1,7 @@
 package com.wahidassistant.controller;
 
 import com.wahidassistant.config.JwtService;
-import com.wahidassistant.model.Event;
-import com.wahidassistant.model.SettingsData;
-import com.wahidassistant.model.User;
+import com.wahidassistant.model.*;
 import com.wahidassistant.repository.UserRepository;
 import com.wahidassistant.service.ScheduleService;
 import com.wahidassistant.service.UserService;
@@ -43,37 +41,61 @@ public class UserController {
     }
 
     @PostMapping("/settings")
-    public ResponseEntity<Object> changeSettings(HttpServletRequest request, @RequestBody SettingsData settingsData) {
-        String name = getUsername(request);
-        Optional<User> user  = service.findByUsername(name);
-        User user1 = user.get();
-        user1.setSettingsData(settingsData);
-        userRepository.save(user1);
+    public ResponseEntity<String> changeSettings(HttpServletRequest request, @RequestBody SettingsData newSettingsData) {
+        String username = getUsername(request);
+        Optional<User> optionalUser  = service.findByUsername(username);
 
-        //return "Settings for " + name + " changed to: " + settingsData.toString();
-        return ResponseEntity.ok().body("Settings for " + name + " changed to: " + settingsData.toString());
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.badRequest().body("User not found");
+        } else {
+            User user = optionalUser.get();
+
+            // Todo: Check what settings changed and take different actions based on that
+
+            // Check if URL already exists in database
+            Optional<Schedule> optionalExistingSchedule = scheduleService.getScheduleByUrl(newSettingsData.getUrl());
+            if (optionalExistingSchedule.isPresent()) {
+                Schedule existingSchedule = optionalExistingSchedule.get();
+                user.setScheduleIdRef(existingSchedule.getId()); // Update user urlRefId to existing schedule id
+            } else {
+                Status status = scheduleService.addOrUpdateSchedule(newSettingsData.getUrl());
+                if (status == Status.FAILED) {
+                    return ResponseEntity.badRequest().body("Invalid Schedule URL");
+                } else {
+                    // Get schedule by URL and set user scheduleIdRef to the new schedule
+                    scheduleService.getScheduleByUrl(newSettingsData.getUrl()).ifPresent(schedule -> user.setScheduleIdRef(schedule.getId()));
+                }
+            }
+            user.setSettingsData(newSettingsData);
+            userRepository.save(user);
+
+            return ResponseEntity.ok().body("Settings for " + username + " changed to: " + newSettingsData);
+        }
     }
-
-    @GetMapping("/get-username")
-    public String showUsername(HttpServletRequest request) {
-        return getUsername(request);
-    }
-
 
     private String getUsername(HttpServletRequest request) {
         final String authHeader = request.getHeader("Authorization");
         final String jwt = authHeader.substring(7);
-        System.out.println(request);
         return jwtService.extractUsername(jwt);
     }
 
-    @PostMapping("/hidden-events")
-    public ResponseEntity<List<Event>> customEvents(HttpServletRequest request, @RequestBody List<Event> hiddenevents) {
+    @PostMapping("/hide-events")
+    public ResponseEntity<List<Event>> updateCustomEvents(HttpServletRequest request, @RequestBody List<Event> hiddenevents) {
         String username = getUsername(request);
         String scheduleIdRef = service.getUserScheduleIdRef(username);
         //List<Event> customEventList = customEvents.createCustomEvents(hiddenevents,scheduleIdRef);
         //service.createCustomEvents(customEventList); //todo: har inte skapats än
         return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    @GetMapping("/hide-events")
+    public ResponseEntity<List<Event>> getCustomEvents(HttpServletRequest request) {
+        String username = getUsername(request);
+        String scheduleIdRef = service.getUserScheduleIdRef(username);
+
+        // Todo: get users schedule with hidden events
+
+        return ResponseEntity.ok().body(null);
     }
 
 

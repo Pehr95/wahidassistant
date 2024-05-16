@@ -20,4 +20,5 @@ public class Event {
     private ArrayList<String> teachers;
     private String description;
     private Date lastUpdated;
+    private boolean isHidden;
 }

@@ -1,6 +1,7 @@
 package com.wahidassistant.component;
 
 import com.wahidassistant.model.Schedule;
+import com.wahidassistant.model.Status;
 import com.wahidassistant.repository.ScheduleRepository;
 import com.wahidassistant.service.ScheduleService;
 import lombok.AllArgsConstructor;
@@ -21,27 +22,30 @@ public class CronJobComponent {
     // Test scraping and saving schedule (Delete later)
     public void scrapeTester() {
         System.out.println("Scraping and saving schedule");
-        Schedule schedule = webScraper.scrapeSchedule("https://schema.mau.se/setup/jsp/Schema.jsp?startDatum=idag&intervallTyp=m&intervallAntal=6&sprak=SV&sokMedAND=true&forklaringar=true&resurser=p.TGSYA23h",2);//"https://schema.mau.se/setup/jsp/Schema.jsp?startDatum=idag&intervallTyp=m&intervallAntal=1&sprak=SV&sokMedAND=true&forklaringar=true&resurser=p.KGGRD23h", 2);
-        if (!scheduleService.updateSchedule(schedule)){
-            scheduleRepository.insert(schedule);
-        }
+        scheduleService.addOrUpdateSchedule("https://schema.mau.se/setup/jsp/Schema.jsp?startDatum=idag&intervallTyp=m&intervallAntal=6&sprak=SV&sokMedAND=true&forklaringar=true&resurser=p.TGSYA23h");// Invalid link --> "https://schema.mau.se/setup/jsp/Schema.jsp?startDatum=idag&intervallTyp=m&intervallAntal=1&sprak=SV&sokMedAND=true&forklaringar=true&resurser=p.KGGRD23"
+        // Invalid link --> "https://schema.mau.se/setup/jsp/Schema.jsp?startDatum=idag&intervallTyp=m&intervallAntal=1&sprak=SV&sokMedAND=true&forklaringar=true&resurser=p.KGGRD23"
     }
 
     // scrape and save every 4 hours
     @Scheduled(cron = "0 0 */4 * * *")
     public void scrapeAndUpdateExistingSchedules() {
         List<Schedule> scheduleList = scheduleRepository.findAll();
-        // Loop through all schedules and check if they have changed
 
+        // Loop through all schedules and check if they have changed
         if (!scheduleList.isEmpty()) {
+            Status status;
             for (Schedule oldSchedule : scheduleList) {
-                Schedule updatedSchedule = webScraper.scrapeSchedule(oldSchedule.getUrl(), 2);
-                if (scheduleService.checkIfScheduleChanged(updatedSchedule)) {
-                    scheduleService.updateSchedule(updatedSchedule);
-                    System.out.println("Updated schedule with id: " + oldSchedule.getId());
-                } else {
-                    System.out.println("Schedule (" + oldSchedule.getId() + ") is up to date. Just updating lastSynced.");
-                    scheduleService.updateScheduleLastSynced(oldSchedule.getId());
+                status = scheduleService.addOrUpdateSchedule(oldSchedule.getUrl());
+                switch (status) {
+                    case UPDATED:
+                        System.out.println("Successfully updated schedule with id: " + oldSchedule.getId());
+                        break;
+                    case FAILED:
+                        System.out.println("Failed to scrape schedule with id: " + oldSchedule.getId());
+                        break;
+                    case NO_CHANGE:
+                        System.out.println("No changes in schedule with id: " + oldSchedule.getId());
+                        break;
                 }
             }
         } else {
@@ -54,4 +58,5 @@ public class CronJobComponent {
     public void cleanUpUnusedSchedules() {
         scheduleService.cleanUpUnusedSchedules();
     }
+
 }

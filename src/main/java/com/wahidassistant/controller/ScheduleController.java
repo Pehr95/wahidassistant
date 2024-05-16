@@ -24,9 +24,4 @@ public class ScheduleController {
         return scheduleService.getAllSchedules();
     }
 
-    public List<Schedule> fetchThisWeekEvents() {
-        return scheduleService.getThisWeekEvents();
-    }
-
-
 }

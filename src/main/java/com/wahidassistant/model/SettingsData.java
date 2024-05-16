@@ -6,11 +6,9 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class SettingsData {
-    private String option;
+    private PreferredTransportation preferredTransportation;
+    private String arrivalTimeOffset;
     private String url;
     private String address;
     private String postalCode;
-    //hejhej
-
-    //settings preffered time in minutes
 }

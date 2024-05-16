@@ -21,12 +21,13 @@ import java.util.regex.Pattern;
 public class WebScraper {
     private final Map<String, Integer> monthConversion = makeMonthConversionHashMap();
 
-    public Schedule scrapeSchedule(String url, int weeksAhead){
-        Document document = fetchDocument(url);
-
+    public Schedule scrapeSchedule(String url) {
+        int weeksAhead = 2; // How many weeks ahead to scrape
         // Todo: felhantering. Kolla om dokumentet har rätt typ av format samt att datum formattering är korrekt.
 
-        if (document == null) {
+        Document document = checkIfUrlIsValid(url);
+
+        if (document == null){
             return null;
         }
 
@@ -102,7 +103,7 @@ public class WebScraper {
 
                 // if timestamps[1] is not more than two weeks in the future add the event
                 if(timestamps[1].getTime() < timestampThreshold.getTime()){
-                    events.add(new Event(  courseName,  timestamps[0],  timestamps[1],  calculateDuration(timestamps),  rooms,  teachers,  description, convertLastUpdatedToDate(lastUpdated)));
+                    events.add(new Event(courseName, timestamps[0], timestamps[1], calculateDuration(timestamps), rooms, teachers, description, convertLastUpdatedToDate(lastUpdated), false));
                 }
             }
         }
@@ -233,5 +234,19 @@ public class WebScraper {
 
         // Convert to Timestamp
         return Timestamp.valueOf(nextMonday.atStartOfDay());
+    }
+
+    public Document checkIfUrlIsValid(String url) {
+        Document document = fetchDocument(url);
+
+        // Check so that the document is not null and that the table has columns "Dag", "Datum", "Start-Slut", "Kurs.grp", "Sign", "Lokal", "Hjälpm.", "Moment" and "Uppdat."
+        if (document != null) {
+            for (Element row : document.select("table.schematabell tr")){
+                if (row.select("th.commonCell.header").text().equals("Dag Datum Start-Slut Kurs.grp Sign Lokal Hjälpm. Moment Uppdat.")) {
+                    return document;
+                }
+            }
+        }
+        return null;
     }
 }
