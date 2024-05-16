@@ -23,6 +23,7 @@ body {
     margin-bottom: 10px; 
   }
   
+  
   #addressInput::placeholder {
     
     color: #999; 
@@ -39,9 +40,22 @@ body {
   }
   
   #urlInput::placeholder {
-    /* Style the placeholder text */
-    color: #999; /* Example placeholder text color */
-    font-style: italic; /* Example placeholder font style */
+    
+    color: #999; 
+    font-style: italic; 
+  }
+  #postnummer{
+    width: 300px; 
+    padding: 10px; 
+    border: 1px solid #ccc; 
+    border-radius: 5px; 
+    font-size: 16px; 
+    margin-bottom: 10px; 
+  }
+  #postnummer::placeholder {
+    
+    color: #999; 
+    font-style: italic; 
   }
 
 
@@ -213,14 +227,14 @@ body {
         }
       
         .save{
-            padding: 10px 20px; /* Example padding */
+            padding: 10px 20px; 
             background-color: #4CAF50; /* Example background color */
-            color: white; /* Example text color */
+            color: white; 
             border:#ccc;
-            border-radius: 5px; /* Example border radius */
-            cursor: pointer; /* Show pointer cursor on hover */
+            border-radius: 5px; 
+            cursor: pointer; 
             font-size: 20px;
-            display: block; /* Sätt knappen till blockelement */
+            display: block; 
             margin: 20px auto;
 
             

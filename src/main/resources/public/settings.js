@@ -8,13 +8,22 @@ async function fetchEvents() {
         const response = await fetch('http://localhost:8080/api/v1/user/settings', {method: 'GET', headers: {'Authorization': 'Bearer ' + getAuthToken()}});
         const currentSettings = await response.json();
         console.log("ok " + currentSettings.option);
-        document.getElementById("urlInput").textContent = currentSettings.url;
-        //displayEvents();
+        document.getElementById("addressInput").value=currentSettings.address;
+        document.getElementById("postnummer").value = currentSettings.postnummer;
+        document.getElementById("urlInput").value = currentSettings.url
+        if(currentSettings.option === "Buss"){
+            document.getElementById("Buss").checked = true;
+        }else if(currentSettings.option === "Cykel"){
+            document.getElementById("Cykel").checked = true;
+        }else{
+            document.getElementById("Ingen").checked = true;
+        }
     } catch (error) {
         console.error('Error fetching events:', error);
         //window.location.href = 'templogin.html';
     }
 }
+
 
 
 function getAuthToken() {
@@ -38,16 +47,18 @@ document.addEventListener("DOMContentLoaded", function() {
         const selectedOption = document.querySelector('input[name="option"]:checked').value;
         const url = document.getElementById("urlInput").value;
         const address = document.getElementById("addressInput").value;
+        const postnummer = document.getElementById("postnummer").value;
 
 
-        saveData(selectedOption, url, address);
-        console.log(selectedOption + " " + url + " " + address)
+        saveData(selectedOption, url, address, postnummer);
+        console.log(selectedOption + " " + url + " " + address + " " + postnummer)
     });
-    function saveData(option, url, address) {
+    function saveData(option, url, address, postnummer) {
         const data = {
             option: option,
             url: url,
-            address: address
+            address: address,
+            postnummer: postnummer
         };
 
         fetch("http://localhost:8080/api/v1/user/settings", {
