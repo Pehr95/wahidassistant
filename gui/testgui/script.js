@@ -1,11 +1,12 @@
-document.addEventListener('DOMContentLoaded', () => {
-    function getWeekNumber(dateString) {
-        const date = new Date(dateString);
-        const oneJan = new Date(date.getFullYear(), 0, 1);
-        const weekNum = Math.ceil((((date - oneJan) / 86400000) + oneJan.getDay() + 1) / 7);
-        return weekNum;
-    }
 
+function getWeekNumber(dateString) {
+    const date = new Date(dateString);
+    const oneJan = new Date(date.getFullYear(), 0, 1);
+    const weekNum = Math.ceil((((date - oneJan) / 86400000) + oneJan.getDay() + 1) / 7);
+    return weekNum;
+}
+
+document.addEventListener('DOMContentLoaded', () => {
     const schemaList = document.querySelector('.schema');
 
     class PopupManager {
@@ -46,10 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     console.log('Before fetch');
     fetch('./data.json')
-        .then(res => {
-            console.log('Response:', res);
-            return res.json();
-        })
+        .then(res => res.json())
         .then(data => {
             console.log('Data:', data);
             const menu = document.querySelector('.menu');
@@ -60,15 +58,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     const events = desiredWeek === 1 ? (data.week1 || []) : (data.week2 || []);
                     events.forEach((event, index) => {
                         console.log(`Processing event ${index + 1}:`, event);
-                    
                         const startTime = new Date(event.startTime.$date).toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' });
                         const endTime = new Date(event.endTime.$date).toLocaleTimeString('sv-SE', { hour: '2-digit', minute: '2-digit' });
-                    
-                        let title = event.courseName || 'Okänt Ämne';
-                        let teacher = event.teachers && event.teachers.join(', ') || 'Okänd Lärare';
-                        let description = event.description || 'Ingen Beskrivning Tillgänglig';
+                        const title = event.courseName || 'Okänt Ämne';
+                        const teacher = event.teachers && event.teachers.join(', ') || 'Okänd Lärare';
+                        const description = event.description || 'Ingen Beskrivning Tillgänglig';
                         let roomsContent = '';
-                    
                         for (const room in event.rooms) {
                             if (event.rooms.hasOwnProperty(room)) {
                                 console.log('Room:', room);
@@ -78,9 +73,7 @@ document.addEventListener('DOMContentLoaded', () => {
                                 `;
                             }
                         }
-                    
                         const isLesson = !!event.courseName; 
-                    
                         const popupContent = `
                             <div class="popup-content">
                                 <h2>${title}</h2>
@@ -91,7 +84,6 @@ document.addEventListener('DOMContentLoaded', () => {
                                 ${roomsContent}
                             </div>
                         `;
-                    
                         const schemaItem = document.createElement('div');
                         schemaItem.classList.add('schema-item');
                         schemaItem.innerHTML = `
