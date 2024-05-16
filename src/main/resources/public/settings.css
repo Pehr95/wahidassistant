@@ -14,7 +14,7 @@ body {
 
     
 }
-#addressInput {
+#adressInput {
     width: 300px; 
     padding: 10px; 
     border: 1px solid #ccc; 
@@ -24,7 +24,7 @@ body {
   }
   
   
-  #addressInput::placeholder {
+  #adressInput::placeholder {
     
     color: #999; 
     font-style: italic; 

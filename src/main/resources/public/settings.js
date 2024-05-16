@@ -7,10 +7,11 @@ async function fetchEvents() {
         
         const response = await fetch('http://localhost:8080/api/v1/user/settings', {method: 'GET', headers: {'Authorization': 'Bearer ' + getAuthToken()}});
         const currentSettings = await response.json();
-        console.log("ok " + currentSettings.option);
-        document.getElementById("addressInput").value=currentSettings.address;
-        document.getElementById("postnummer").value = currentSettings.postnummer;
-        document.getElementById("urlInput").value = currentSettings.url
+    
+        
+        document.getElementById("adressInput").value=currentSettings.address;
+        document.getElementById("postnummer").value = currentSettings.postNr;
+        document.getElementById("urlInput").value = currentSettings.url;
         if(currentSettings.option === "Buss"){
             document.getElementById("Buss").checked = true;
         }else if(currentSettings.option === "Cykel"){
@@ -46,19 +47,19 @@ document.addEventListener("DOMContentLoaded", function() {
     saveButton.addEventListener("click", function() {
         const selectedOption = document.querySelector('input[name="option"]:checked').value;
         const url = document.getElementById("urlInput").value;
-        const address = document.getElementById("addressInput").value;
+        const adress = document.getElementById("adressInput").value;
         const postnummer = document.getElementById("postnummer").value;
 
 
-        saveData(selectedOption, url, address, postnummer);
-        console.log(selectedOption + " " + url + " " + address + " " + postnummer)
+        saveData(selectedOption, url, adress, postnummer);
+        console.log(selectedOption + " " + url + " " + adress + " " + postnummer)
     });
-    function saveData(option, url, address, postnummer) {
+    function saveData(option, url, adress, postnummer) {
         const data = {
             option: option,
             url: url,
-            address: address,
-            postnummer: postnummer
+            address: adress,
+            postNr: postnummer
         };
 
         fetch("http://localhost:8080/api/v1/user/settings", {

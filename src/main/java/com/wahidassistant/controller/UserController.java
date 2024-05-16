@@ -43,21 +43,21 @@ public class UserController {
     }
 
     @PostMapping("/settings")
-    public String changeSettings(HttpServletRequest request, @RequestBody SettingsData settingsData) {
+    public void changeSettings(HttpServletRequest request, @RequestBody SettingsData settingsData) {
         String name = getUsername(request);
         Optional<User> user  = service.findByUsername(name);
         User user1 = user.get();
         user1.setSettingsData(settingsData);
+        System.out.println(settingsData);
         userRepository.save(user1);
 
-        return "Settings changed";
     }
     @GetMapping("/settings")
     public SettingsData changeSettings(HttpServletRequest request) {
         String name = getUsername(request);
         Optional<User> user  = service.findByUsername(name);
         User user1 = user.get();
-        System.out.println(user1.getSettingsData());
+        //System.out.println(user1.getSettingsData());
 
 
         return user1.getSettingsData();
