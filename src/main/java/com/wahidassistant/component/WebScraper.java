@@ -80,7 +80,9 @@ public class WebScraper {
 
                 // Room codes to room names and maze map links
                 for (Element classRoom : row.select("td.commonCell:nth-of-type(7) a")){
-                    rooms.put(classRoom.text(), allRooms.getOrDefault(classRoom.text(), ""));
+
+                    rooms.put(classRoom.text(), trimLettersAtEnd(allRooms.getOrDefault(classRoom.text(), "")));
+                    //rooms.put(classRoom.text(), allRooms.getOrDefault(classRoom.text(), ""));
                 }
 
                 // Description
@@ -105,6 +107,22 @@ public class WebScraper {
             }
         }
         return new Schedule(url, events);
+    }
+
+    public String trimLettersAtEnd(String input) {
+        int length = input.length();
+        StringBuilder stringBuilder = new StringBuilder(input);
+
+        for (int i = length - 1; i >= 0; i--) {
+            char c = stringBuilder.charAt(i);
+            if (Character.isDigit(c)) {
+                break;
+            } else if (Character.isLetter(c)) {
+                stringBuilder.deleteCharAt(i);
+            }
+        }
+
+        return stringBuilder.toString();
     }
 
     public static String extractCourseName(String inputString) {

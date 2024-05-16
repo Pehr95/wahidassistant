@@ -117,7 +117,7 @@ public class WeatherService {
 
 
                  System.out.println(date + " " + time );
-                 timestamp.add(date + " " + time + " " + valuesToWeather() );
+                 timestamp.add(date + " " + time + " " + valuesToWeather(1) ); //todo fixa detta
              }
 
 

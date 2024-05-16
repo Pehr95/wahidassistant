@@ -101,32 +101,54 @@
         }
        
         .delete{
+            display: flex;
+            position: absolute;
             background-color: red;
             border-radius: 10px;
             font-size: large;
             color: white;
             height: 50px;
-            
+            left: 48%;
+            top:75%;
+
+
+
         }
         .signout{
+            display: flex;
+            position: absolute;
             background-color: red;
             border-radius: 10px;
             font-size: large;
             margin-top: 5%;
-            margin-right: 20px;
             color: white;
             height: 50px;
-            
-        
+            left: 48%;
+
+
+
         }
         .adresstext {
-   
+
             line-height: 1; /* or adjust as needed */
-            
+
         }
         .urltext{
             line-height: 1; /* or adjust as needed */
 
+        }
+        .save{
+            display: flex;
+            position: absolute;
+            left: 50%;
+            height: 40px;
+            font-size: large;
+            margin-top: 50px;
+
+
+
+            background-color: #03bc03;
+            border-radius: 10px;
         }
        
 
