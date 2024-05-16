@@ -7,14 +7,16 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.ArrayList;
 import java.util.Date;
 
-@Data
 @AllArgsConstructor
+@Data
 public class BusEvent {
-    private ArrayList<String> busNameAndNUmber;
+    private String busNumber;
+    private String busName;
     private Date departureTime;
     private Date arrivalTime;
-    private int duration;
+    private String durationInMinutes;
     private String origin; //location of departure
     private String destination; //location of arrival
     private int preferredArrivalTime;
+
 }

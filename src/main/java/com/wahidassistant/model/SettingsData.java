@@ -9,6 +9,7 @@ public class SettingsData {
     private String option;
     private String url;
     private String address;
+    private String postalCode;
     //hejhej
 
     //settings preffered time in minutes

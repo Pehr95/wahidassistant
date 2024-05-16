@@ -106,7 +106,7 @@ public class WebScraper {
                 }
             }
         }
-        return new Schedule(url, events);
+        return new Schedule(url, events, new java.util.Date());
     }
 
     public String trimLettersAtEnd(String input) {

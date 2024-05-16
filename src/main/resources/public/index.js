@@ -11,6 +11,7 @@ async function fetchEvents() {
         const schedule = schedules[0];
         const events = schedule.events;
         displayEvents(events);
+        console.log(events);
     } catch (error) {
         console.error('Error fetching events:', error);
         //window.location.href = 'templogin.html';

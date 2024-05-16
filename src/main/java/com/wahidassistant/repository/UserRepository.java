@@ -19,6 +19,9 @@ public interface UserRepository extends MongoRepository<User, String> {
     List<Event> findCustomEvents(String username);
     //Todo: fixa att det finns i databasen
 
+    // find all users with a specific schedule id
+    Optional<User> findByScheduleIdRef(String id);
+
 
 
 }
