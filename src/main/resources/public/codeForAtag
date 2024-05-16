@@ -1,0 +1,19 @@
+        /*
+        infoRooms.innerHTML = "Rum: "; // Clearing previous content
+
+        // Iterate through the keys and values of event.rooms
+        for (const roomName in event.rooms) {
+            if (event.rooms.hasOwnProperty(roomName)) {
+                const roomLink = event.rooms[roomName];
+                const roomAnchor = document.createElement('a');
+                roomAnchor.textContent = roomName;
+                roomAnchor.href = roomLink;
+                infoRooms.appendChild(roomAnchor);
+
+                // Add a comma and space after each anchor except the last one
+                if (Object.keys(event.rooms).indexOf(roomName) < Object.keys(event.rooms).length - 1) {
+                    infoRooms.appendChild(document.createTextNode(', '));
+                }
+            }
+        }
+        */
