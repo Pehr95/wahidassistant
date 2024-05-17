@@ -17,4 +17,6 @@ public interface ScheduleRepository extends MongoRepository<Schedule, String> {
     void deleteById(String id);
 
 
+
+
 }

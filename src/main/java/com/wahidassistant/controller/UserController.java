@@ -26,18 +26,17 @@ public class UserController {
     //private final CustomEvents customEvents;
 
     @GetMapping("/schedule")
-    public List<String> fetchSchedule(HttpServletRequest request) {
+    public List<Schedule> fetchSchedule(HttpServletRequest request) {
+        String username = getUsername(request);
+        //String scheduleIdRef = service.getUserScheduleIdRef(username);
 
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt = authHeader.substring(7);
-        System.out.println(jwtService.extractUsername(jwt));
+        Optional<User> optionalUser = service.findByUsername(username);
+        if (optionalUser.isPresent()) {
+            User user = optionalUser.get();
+            return scheduleService.getScheduleById(user.getScheduleIdRef()).map(List::of).orElse(null);
+        }
 
-        /*
-       Wahid & Amer
-         */
-        //return userRepository.findCustomEvents(getUsername(request));
-
-        return scheduleService.getScheduleByUsername();
+        return null;
     }
 
     @PostMapping("/settings")

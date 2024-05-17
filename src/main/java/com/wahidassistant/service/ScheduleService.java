@@ -27,10 +27,6 @@ public class ScheduleService {
         return scheduleRepository.findAll();
     }
 
-    public List<String> getScheduleByUsername() {
-        return null;
-    }
-
     public Optional<Schedule> getScheduleById(String id){return scheduleRepository.findById(id);}
 
     public Optional<Schedule> getScheduleByUrl(String url){return scheduleRepository.findScheduleByUrl(url);}

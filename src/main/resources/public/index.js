@@ -5,7 +5,7 @@ window.onload = fetchEvents();
 async function fetchEvents() {
     try {
         console.log("hej: " + document.cookie);
-        const response = await fetch('http://192.168.1.70:8080/api/v1/schedules/all', {method: 'GET', headers: {'Authorization': 'Bearer ' + getAuthToken()}});
+        const response = await fetch('http://192.168.1.70:8080/api/v1/user/schedule', {method: 'GET', headers: {'Authorization': 'Bearer ' + getAuthToken()}});
         const schedules = await response.json();
         console.log("ok");
         const schedule = schedules[0];
