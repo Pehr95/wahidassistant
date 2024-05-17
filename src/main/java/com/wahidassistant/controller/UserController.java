@@ -43,44 +43,37 @@ public class UserController {
     }
 
     @PostMapping("/settings")
-    public ResponseEntity<String> changeSettings(HttpServletRequest request, @RequestBody SettingsData newSettingsData) {
+    public ResponseEntity<SettingsData> changeSettings(HttpServletRequest request, @RequestBody SettingsData newSettingsData) {
         String username = userService.getUsername(request);
         Optional<User> optionalUser  = userService.findByUsername(username);
 
         if (optionalUser.isEmpty()) {
-            return ResponseEntity.badRequest().body("User not found");
+            return ResponseEntity.badRequest().body(null);
         } else {
             User user = optionalUser.get();
 
             // Todo: Check what settings changed and take different actions based on that
 
-            // Check if URL already exists in database
+            // Check if exact URL already exists in database
             Optional<Schedule> optionalExistingSchedule = scheduleService.getScheduleByUrl(newSettingsData.getUrl());
             if (optionalExistingSchedule.isPresent()) {
                 Schedule existingSchedule = optionalExistingSchedule.get();
                 user.setScheduleIdRef(existingSchedule.getId()); // Update user urlRefId to existing schedule id
             } else {
-                String similarScheduleId = scheduleService.getSimilarScheduleId(newSettingsData.getUrl());
-                if (similarScheduleId == null) {
-                    Status status = scheduleService.addOrUpdateSchedule(newSettingsData.getUrl());
-                    if (status == Status.FAILED) {
-                        System.out.println("Invalid Schedule URL");
-                        return ResponseEntity.badRequest().body("Invalid Schedule URL");
-                    } else {
-                        // Get new schedule by URL and set user scheduleIdRef to the new schedule
-                        scheduleService.getScheduleByUrl(newSettingsData.getUrl()).ifPresent(schedule -> user.setScheduleIdRef(schedule.getId()));
-                    }
+                Status status = scheduleService.addOrUpdateSchedule(newSettingsData.getUrl());
+                if (status == Status.FAILED) {
+                    System.out.println("Invalid Schedule URL");
+                    return ResponseEntity.badRequest().body(null);
                 } else {
-                    user.setScheduleIdRef(similarScheduleId);
-                    System.out.println("similar schedule found");
-                    System.out.println(scheduleService.getScheduleById(similarScheduleId));
-                    scheduleService.getScheduleById(similarScheduleId).ifPresent(schedule -> newSettingsData.setUrl(schedule.getUrl()));
+                    // Get new schedule by URL and set user scheduleIdRef to the new schedule
+                    scheduleService.getScheduleByUrl(newSettingsData.getUrl()).ifPresent(schedule -> user.setScheduleIdRef(schedule.getId()));
                 }
             }
             user.setSettingsData(newSettingsData);
             userRepository.save(user);
 
-            return ResponseEntity.ok().body("Settings for " + username + " changed to: " + newSettingsData);
+            return ResponseEntity.ok().body(newSettingsData);
+            //return ResponseEntity.ok().body("Settings for " + username + " changed to: " + newSettingsData);
         }
     }
 
@@ -97,22 +90,36 @@ public class UserController {
     }
 
     @PostMapping("/hide-events")
-    public ResponseEntity<List<Event>> updateCustomEvents(HttpServletRequest request, @RequestBody List<Event> hiddenevents) {
+    public ResponseEntity<List<Event>> updateCustomEvents(HttpServletRequest request, @RequestBody Schedule newFullCustomSchedule) {
         String username = userService.getUsername(request);
-        String scheduleIdRef = userService.getUserScheduleIdRef(username);
-        //List<Event> customEventList = customEvents.createCustomEvents(hiddenevents,scheduleIdRef);
-        //service.createCustomEvents(customEventList); //todo: har inte skapats än
-        return new ResponseEntity<>(HttpStatus.CREATED);
+        Optional<User> optionalUser = userService.findByUsername(username);
+
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        User user = optionalUser.get();
+
+
+
+        if (scheduleService.updateUsersHiddenEventsFromFullCustomSchedule(newFullCustomSchedule, user)) {
+            // Todo: Implement logic to update users custom events
+            scheduleService.updateUsersCustomEvents(user);
+            return ResponseEntity.ok().body(newFullCustomSchedule.getEvents());
+        }
+        return ResponseEntity.badRequest().body(null);
     }
 
     @GetMapping("/hide-events")
-    public ResponseEntity<List<Event>> getCustomEvents(HttpServletRequest request) {
+    public ResponseEntity<Schedule> getCustomEvents(HttpServletRequest request) {
         String username = userService.getUsername(request);
-        String scheduleIdRef = userService.getUserScheduleIdRef(username);
+        Optional<User> optionalUser = userService.findByUsername(username);
 
-        // Todo: get users schedule with hidden events
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.badRequest().body(null);
+        }
 
-        return ResponseEntity.ok().body(null);
+        return ResponseEntity.ok().body(scheduleService.getUsersFullCustomSchedule(optionalUser.get()));
     }
 
 

@@ -22,7 +22,7 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
-    public AuthenticationResponse register(RegisterRequest request) {
+    public AuthenticationResponse register(RegisterRequest request, HttpServletResponse response) {
         // Check if the username already exists
         if (repository.findByUsername((request.getUsername())).isPresent()){
             throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
@@ -37,6 +37,16 @@ public class AuthenticationService {
                 .build();
         repository.save(user);
         var jwtToken = jwtService.generateToken(user);
+
+        // Set JWT token as cookie
+        Cookie cookie = new Cookie("auth_token", jwtToken);
+        cookie.setPath("/");
+        cookie.setMaxAge(jwtService.getExpirationTimeInSeconds());
+        cookie.setSecure(false);
+        cookie.setHttpOnly(false);
+        response.addCookie(cookie);
+
+
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 
@@ -44,12 +54,13 @@ public class AuthenticationService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
         var user = repository.findByUsername(request.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
         var jwtToken = jwtService.generateToken(user);
-
+        System.out.println("test");
 
         // Set JWT token as cookie
         Cookie cookie = new Cookie("auth_token", jwtToken);
         cookie.setPath("/");
         cookie.setMaxAge(jwtService.getExpirationTimeInSeconds());
+        System.out.println(jwtService.getExpirationTimeInSeconds());
         cookie.setSecure(false);
         cookie.setHttpOnly(false);
         response.addCookie(cookie);

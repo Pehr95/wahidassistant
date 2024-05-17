@@ -14,12 +14,13 @@ public class Main {
 	}
 
 	@Bean
-	CommandLineRunner runWhenServerStarts(CronJobComponent scrapingScheduler) {
+	CommandLineRunner runWhenServerStarts(CronJobComponent scrapingScheduler, CronJobComponent cronJobComponent) {
 		return args -> {
 			//scrapingScheduler.scrapeAndUpdateExistingSchedules();
 			//scrapingScheduler.scrapeTester();
 			//scrapingScheduler.scrapeAndUpdateExistingSchedules();
 			//scrapingScheduler.cleanUpUnusedSchedules();
+			cronJobComponent.scrapeAndUpdateExistingSchedules();
 		};
 	}
 

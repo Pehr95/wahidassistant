@@ -48,6 +48,7 @@ public class WebScraper {
         String weekNum = "";
         String year = "";
 
+
         // Variables to store html column query
         String dateColumnQuery1 = "td.data.commonCell:nth-of-type(" + (Integer.parseInt(columnNumbers.get("Datum"))+1) +")";
         String dateColumnQuery2 = "td.data.commonCell:nth-of-type(" + columnNumbers.get("Datum") +")";
@@ -253,7 +254,6 @@ public class WebScraper {
         if (!url.contains("https://")) {
             return null;
         }
-
 
         if (url.contains("d&intervallAntal=")){
             return null;

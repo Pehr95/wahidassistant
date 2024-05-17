@@ -17,11 +17,13 @@ public class HomeController {
     @GetMapping("/")
     public String home(HttpServletRequest request) {
         String username = userService.getUsername(request);
-        if (username == null) {
-            return "templogin.html";
-        } else {
-            return "index.html";
+        System.out.println(username);
+        if (username != null) {
+            if (userService.findByUsername(username).isPresent()){
+                return "index.html";
+            }
         }
+        return "templogin.html";
     }
 
     @GetMapping("/settings")

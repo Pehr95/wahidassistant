@@ -39,6 +39,8 @@ public class CronJobComponent {
                 switch (status) {
                     case UPDATED:
                         System.out.println("Successfully updated schedule with id: " + oldSchedule.getId());
+                        System.out.println("Updating all relevant users custom events");
+                        scheduleService.updateAllRelevantUsersCustomEvents(oldSchedule.getId());
                         break;
                     case FAILED:
                         System.out.println("Failed to scrape schedule with id: " + oldSchedule.getId());
