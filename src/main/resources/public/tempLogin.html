@@ -115,7 +115,7 @@
             const jwt = data.token;
             alert('JWT: ' + jwt); // Display JWT in a popup
             // Redirect or show success message
-            document.cookie = `auth_token=${jwt}; path=/`; //kommentera bort denna sen. Endast här för liveserver.
+            //document.cookie = `auth_token=${jwt}; path=/`; //kommentera bort denna sen. Endast här för liveserver.
             console.log("cookies: " + document.cookie);
             window.location.href = '/';
         })
@@ -146,7 +146,7 @@
             const jwt = data.token;
             alert('JWT: ' + jwt); // Display JWT in a popup
             // Redirect or show success message
-            window.location.href = 'settings.html';
+            window.location.href = 'settings';
         })
         .catch(error => {
             console.error('Error:', error);
