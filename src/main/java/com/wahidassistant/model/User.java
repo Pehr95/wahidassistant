@@ -19,13 +19,16 @@ import java.util.List;
 public class User implements UserDetails {
     @Id
     private String id;
+    private Role role;
     private String username;
     private String password;
-    private Role role;
+
 
     private String scheduleIdRef;
     private ArrayList<Event> customEvents;
     private ArrayList<Event> hiddenEvents;
+
+    private int timeToBikeToUniversity; // This sets in minutes when address is updated
     private SettingsData settingsData;
 
     @Override

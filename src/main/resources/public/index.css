@@ -32,6 +32,11 @@ header #menu{
     width: 1.5em;
 }
 
+header #logout{
+    margin: 0;
+    width: 1.5em;
+}
+
 header button{
     margin-left: auto;
     background-color: #ffffff;

@@ -5,12 +5,13 @@ window.onload = fetchEvents();
 async function fetchEvents() {
     try {
         console.log("hej: " + document.cookie);
-        const response = await fetch('http://192.168.1.70:8080/api/v1/schedules/all', {method: 'GET', headers: {'Authorization': 'Bearer ' + getAuthToken()}});
+        const response = await fetch('/api/v1/user/schedule', {method: 'GET', headers: {'Authorization': 'Bearer ' + getAuthToken()}});
         const schedules = await response.json();
         console.log("ok");
         const schedule = schedules[0];
         const events = schedule.events;
         displayEvents(events);
+        console.log(events);
     } catch (error) {
         console.error('Error fetching events:', error);
         //window.location.href = 'templogin.html';
@@ -29,6 +30,26 @@ function getAuthToken() {
     }
     console.log('No auth token found.')
     return null; // Return null if token is not found
+}
+
+function redirectToSettings() {
+    window.location.href = '/settings';
+}
+
+function logout() {
+    // Delete the JWT cookie
+    deleteCookie('auth_token');
+
+    // Optionally clear other related storage if used
+    localStorage.removeItem('auth_token');
+    sessionStorage.removeItem('auth_token');
+
+    // Redirect to login page or homepage after logging out
+    window.location.href = '/'; // Adjust the URL as needed
+}
+
+function deleteCookie(name) {
+    document.cookie = name + '=; Max-Age=0; path=/; domain=' + window.location.hostname + '; secure; SameSite=Strict';
 }
 
 

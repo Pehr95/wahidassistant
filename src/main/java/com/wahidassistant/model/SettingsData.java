@@ -6,8 +6,9 @@ import lombok.Data;
 @AllArgsConstructor
 @Data
 public class SettingsData {
-    private String option;
+    private PreferredTransportation preferredTransportation;
+    private String arrivalTimeOffset;
     private String url;
     private String address;
-    //hejhej
+    private String postalCode;
 }

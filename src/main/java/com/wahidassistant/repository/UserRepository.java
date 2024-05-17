@@ -15,9 +15,15 @@ public interface UserRepository extends MongoRepository<User, String> {
     @Query(value = "{ 'username' : ?0 }", fields = "{ 'scheduleidref' : 1 }")
     String findScheduleIdRefById(String username);
 
-    @Query (value = "{ 'username' ; ?0", fields = "{ 'customevents' : 1 }")
+    @Query (value = "{ 'username' : ?0 }", fields = "{ 'customevents' : 1 }")
     List<Event> findCustomEvents(String username);
     //Todo: fixa att det finns i databasen
+
+    // find user with a specific schedule id
+    Optional<User> findByScheduleIdRef(String id);
+
+    // find all users with a specific schedule id
+    Optional<List<User>> findUsersByScheduleIdRef(String id);
 
 
 

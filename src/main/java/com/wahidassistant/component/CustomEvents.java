@@ -1,10 +1,8 @@
 package com.wahidassistant.component;
 
-
 import com.wahidassistant.model.Event;
 import com.wahidassistant.model.Schedule;
 import com.wahidassistant.service.ScheduleService;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,5 +32,4 @@ public class CustomEvents {
         }
         return customEvents;
     }
-
 }

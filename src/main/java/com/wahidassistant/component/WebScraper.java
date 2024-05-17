@@ -20,13 +20,15 @@ import java.util.regex.Pattern;
 @Component
 public class WebScraper {
     private final Map<String, Integer> monthConversion = makeMonthConversionHashMap();
+    private HashMap<String, String> columnNumbers = new HashMap<>();
 
-    public Schedule scrapeSchedule(String url, int weeksAhead){
-        Document document = fetchDocument(url);
-
+    public Schedule scrapeSchedule(String url) {
+        int weeksAhead = 2; // How many weeks ahead to scrape
         // Todo: felhantering. Kolla om dokumentet har rätt typ av format samt att datum formattering är korrekt.
 
-        if (document == null) {
+        Document document = checkIfUrlIsValid(url);
+
+        if (document == null){
             return null;
         }
 
@@ -46,6 +48,18 @@ public class WebScraper {
         String weekNum = "";
         String year = "";
 
+
+        // Variables to store html column query
+        String dateColumnQuery1 = "td.data.commonCell:nth-of-type(" + (Integer.parseInt(columnNumbers.get("Datum"))+1) +")";
+        String dateColumnQuery2 = "td.data.commonCell:nth-of-type(" + columnNumbers.get("Datum") +")";
+        String timeColumnQuery = "td.data.commonCell:nth-of-type(" + columnNumbers.get("Start-Slut") + ")";
+        String courseNameColumnQuery = "td.commonCell:nth-of-type(" + columnNumbers.get("Kurs.grp") + ") a";
+        String teacherCodesColumnQuery = "td.commonCell:nth-of-type(" + columnNumbers.get("Sign") + ") a";
+        String roomCodesColumnQuery = "td.commonCell:nth-of-type(" + columnNumbers.get("Lokal") + ") a";
+        String descriptionColumnQuery = "td.data.commonCell:nth-of-type(" + columnNumbers.get("Moment") + ")";
+        String lastUpdatedColumnQuery = "td.data.commonCell:nth-of-type(" + columnNumbers.get("Uppdat.") + ")";
+
+
         for (Element row : document.select("table.schematabell tr")){
             HashMap<String, String> rooms = new HashMap<>();
             ArrayList<String> teachers = new ArrayList<>();
@@ -57,42 +71,42 @@ public class WebScraper {
                 year = parts[1];
             }
 
-            if (!row.select("td.data.commonCell:nth-of-type(4)").text().isEmpty()){
+            if (!row.select(dateColumnQuery1).text().isEmpty()){
                 // Date
-                if (!row.select("td.data.commonCell:nth-of-type(3)").text().isEmpty()) {
-                    date = row.select("td.data.commonCell:nth-of-type(3)").text();
+                if (!row.select(dateColumnQuery2).text().isEmpty()) {
+                    date = row.select(dateColumnQuery2).text();
                 }
 
                 // Time
-                time = row.select("td.data.commonCell:nth-of-type(4)").text();
+                time = row.select(timeColumnQuery).text();
 
                 // Course name
-                if (!row.select("td.commonCell:nth-of-type(5) a").isEmpty()){
-                    courseName = extractCourseName(row.select("td.commonCell:nth-of-type(5) a").get(0).text());
+                if (!row.select(courseNameColumnQuery).isEmpty()){
+                    courseName = extractCourseName(row.select(courseNameColumnQuery).get(0).text());
                 }
 
                 // Teacher codes to names
-                for (Element teacherCode : row.select("td.commonCell:nth-of-type(6) a")){
+                for (Element teacherCode : row.select(teacherCodesColumnQuery)){
                     if (allTeacherNames.containsKey(teacherCode.text())){
                         teachers.add(allTeacherNames.get(teacherCode.text()));
                     }
                 }
 
                 // Room codes to room names and maze map links
-                for (Element classRoom : row.select("td.commonCell:nth-of-type(7) a")){
+                for (Element classRoom : row.select(roomCodesColumnQuery)){
 
-                    rooms.put(classRoom.text(), trimLettersAtEnd(allRooms.getOrDefault(classRoom.text(), "")));
+                    rooms.put(classRoom.text(), trimLettersAtEndOfMazeMapUrl(allRooms.getOrDefault(classRoom.text(), "")));
                     //rooms.put(classRoom.text(), allRooms.getOrDefault(classRoom.text(), ""));
                 }
 
                 // Description
-                if (!row.select("td.data.commonCell:nth-of-type(9)").isEmpty()){
-                    description = row.select("td.data.commonCell:nth-of-type(9)").get(0).text();
+                if (!row.select(descriptionColumnQuery).isEmpty()){
+                    description = row.select(descriptionColumnQuery).get(0).text();
                 }
 
                 // Last updated
-                if (!row.select("td.data.commonCell:nth-of-type(10)").isEmpty()){
-                    lastUpdated = row.select("td.data.commonCell:nth-of-type(10)").get(0).text();
+                if (!row.select(lastUpdatedColumnQuery).isEmpty()){
+                    lastUpdated = row.select(lastUpdatedColumnQuery).get(0).text();
                 }
 
                 // Convert the year, date and time to timestamps
@@ -102,14 +116,14 @@ public class WebScraper {
 
                 // if timestamps[1] is not more than two weeks in the future add the event
                 if(timestamps[1].getTime() < timestampThreshold.getTime()){
-                    events.add(new Event(  courseName,  timestamps[0],  timestamps[1],  calculateDuration(timestamps),  rooms,  teachers,  description, convertLastUpdatedToDate(lastUpdated)));
+                    events.add(new Event(courseName, timestamps[0], timestamps[1], calculateDuration(timestamps), rooms, teachers, description, convertLastUpdatedToDate(lastUpdated), false));
                 }
             }
         }
-        return new Schedule(url, events);
+        return new Schedule(url, events, new java.util.Date());
     }
 
-    public String trimLettersAtEnd(String input) {
+    public String trimLettersAtEndOfMazeMapUrl(String input) {
         int length = input.length();
         StringBuilder stringBuilder = new StringBuilder(input);
 
@@ -233,5 +247,45 @@ public class WebScraper {
 
         // Convert to Timestamp
         return Timestamp.valueOf(nextMonday.atStartOfDay());
+    }
+
+    public Document checkIfUrlIsValid(String url) {
+
+        if (!url.contains("https://")) {
+            return null;
+        }
+
+        if (url.contains("d&intervallAntal=")){
+            return null;
+        }
+
+        Document document = fetchDocument(url);
+        System.out.println("Fetching document from: " + url);
+        columnNumbers = new HashMap<>();
+        String[] requiredColumns = {"Datum", "Start-Slut", "Kurs.grp", "Sign", "Lokal", "Moment", "Uppdat."};
+
+
+        // Create HashMap with all column headers and their column numbers
+        if (document != null) {
+            int columnNumber = 2;
+            for (Element row : document.select("table.schematabell tr")){
+                if (!row.select("th.commonCell.header").isEmpty()) {
+                    for (Element columnHeader : row.select("th.commonCell.header")) {
+                        columnNumbers.put(columnHeader.text(), Integer.toString(columnNumber++));
+                    }
+                }
+            }
+            // Check if HashMap contains all requiredColumns
+            for (String requiredColumn : requiredColumns) {
+                if (!columnNumbers.containsKey(requiredColumn)){
+                    System.out.println("URL is invalid since at least column \"" + requiredColumn + "\" is missing: ");
+                    return null;
+                }
+            }
+            System.out.println("All required columns are present");
+            return document;
+        }
+
+        return null;
     }
 }
