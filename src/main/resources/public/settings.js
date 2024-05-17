@@ -41,7 +41,16 @@ function getAuthToken() {
 }
 
 
+
+
 document.addEventListener("DOMContentLoaded", function() {
+
+    const returnButton = document.getElementById("return");
+    returnButton.addEventListener("click", function(){
+        //document.cookie = `auth_token=${jwt}; path=/`;
+        window.location.href = "index.html" // funkar ens detta ?
+    });
+    
     const saveButton = document.getElementById("saveButton");
 
     saveButton.addEventListener("click", function() {

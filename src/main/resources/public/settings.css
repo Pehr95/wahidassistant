@@ -5,15 +5,34 @@ body {
     margin: 0;
 }
 .header{
-    margin-bottom: 25px;
-    font-size: 20px;
-    margin-left: 10PX;
+    font-size: 25px;
+    margin-left: 0PX;
     font-weight: bold
     
-    
-
-    
 }
+.header-container{
+    
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-bottom: 0px;
+    padding-top: 15px;
+    padding-left: 5px;
+
+}
+
+.return-button{
+    border: none;
+    padding-right: 10px;
+}
+.return{
+    width: 35px;
+    height: 35px;
+
+
+}
+
+
 #adressInput {
     width: 300px; 
     padding: 10px; 
