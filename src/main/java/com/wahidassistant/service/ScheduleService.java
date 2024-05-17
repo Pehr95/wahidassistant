@@ -8,6 +8,7 @@ import com.wahidassistant.model.User;
 import com.wahidassistant.repository.ScheduleRepository;
 import com.wahidassistant.repository.UserRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ public class ScheduleService {
     private final ScheduleRepository scheduleRepository;
     private final UserRepository userRepository;
     private final WebScraper webScraper;
+    private final StringHttpMessageConverter stringHttpMessageConverter;
 
     public List<Schedule> getAllSchedules() {
         return scheduleRepository.findAll();
@@ -34,7 +36,7 @@ public class ScheduleService {
     // Todo: DELETE THIS METHOD
     public boolean updateSchedule(Schedule updatedSchedule) {
         boolean confirmed = false;
-        Optional<Schedule> scheduleOptional = scheduleRepository.findScheduleByUrl(updatedSchedule.getUrl());
+        Optional<Schedule> scheduleOptional = getScheduleByUrl(updatedSchedule.getUrl());
         if (scheduleOptional.isPresent()) {
             Schedule schedule = scheduleOptional.get();
             schedule.setEvents(updatedSchedule.getEvents());
@@ -49,7 +51,7 @@ public class ScheduleService {
         Schedule newSchedule = webScraper.scrapeSchedule(url);
 
         if (newSchedule != null) {
-            Optional<Schedule> scheduleOptional = scheduleRepository.findScheduleByUrl(url);
+            Optional<Schedule> scheduleOptional = getScheduleByUrl(url);
             if (scheduleOptional.isPresent()) {
                 Schedule existingSchedule = scheduleOptional.get();
                 if (checkIfScheduleChanged(newSchedule)) {
@@ -69,6 +71,26 @@ public class ScheduleService {
         return status;
     }
 
+    public String getSimilarScheduleId(String url) {
+        Optional<Schedule> scheduleOptional = getScheduleByUrl(url);
+        if (scheduleOptional.isEmpty()) {
+            String newScheduleUrlEnding = url.split("&resurser=")[1];
+
+            List<Schedule> allSchedules = scheduleRepository.findAll();
+
+            if (!allSchedules.isEmpty()) {
+                String currentScheduleUrlEnding = "";
+                for (Schedule schedule : allSchedules) {
+                    currentScheduleUrlEnding = schedule.getUrl().split("&resurser=")[1];
+                    if (currentScheduleUrlEnding.equals(newScheduleUrlEnding)) {
+                        return schedule.getId();
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
 
     // Todo: DELETE THIS METHOD
     public void updateScheduleLastSynced(String id) {
@@ -82,7 +104,7 @@ public class ScheduleService {
 
     private boolean checkIfScheduleChanged(Schedule updatedSchedule) {
         boolean haveChanged = false;
-        Optional<Schedule> scheduleOptional = scheduleRepository.findScheduleByUrl(updatedSchedule.getUrl());
+        Optional<Schedule> scheduleOptional = getScheduleByUrl(updatedSchedule.getUrl());
         if (scheduleOptional.isPresent()) {
             Schedule oldSchedule = scheduleOptional.get();
             for (int i = 0; i < updatedSchedule.getEvents().size(); i++) {
@@ -109,4 +131,5 @@ public class ScheduleService {
         }
         System.out.println("Deleted " + counter + " unused schedules");
     }
+
 }

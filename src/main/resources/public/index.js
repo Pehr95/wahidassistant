@@ -32,6 +32,10 @@ function getAuthToken() {
     return null; // Return null if token is not found
 }
 
+function redirectToSettings() {
+    window.location.href = '/settings';
+}
+
 
 
 function displayEvents(events) {

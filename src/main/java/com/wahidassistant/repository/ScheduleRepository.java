@@ -11,6 +11,8 @@ import java.util.Optional;
 public interface ScheduleRepository extends MongoRepository<Schedule, String> {
     Optional<Schedule> findScheduleByUrl(String url);
 
+    Optional<Schedule> findScheduleByUrlEndingWith(String urlEnding);
+
     @Query("{'events.eventDateTime': { $gte: ?0, $lt: ?1 }}")
     List<Schedule> findByEventsEventDateTimeBetween(LocalDateTime startOfDay, LocalDateTime startOfNextDay);
 

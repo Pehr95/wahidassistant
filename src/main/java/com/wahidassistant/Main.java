@@ -16,7 +16,7 @@ public class Main {
 	@Bean
 	CommandLineRunner runWhenServerStarts(CronJobComponent scrapingScheduler) {
 		return args -> {
-			scrapingScheduler.scrapeAndUpdateExistingSchedules();
+			//scrapingScheduler.scrapeAndUpdateExistingSchedules();
 			//scrapingScheduler.scrapeTester();
 			//scrapingScheduler.scrapeAndUpdateExistingSchedules();
 			//scrapingScheduler.cleanUpUnusedSchedules();

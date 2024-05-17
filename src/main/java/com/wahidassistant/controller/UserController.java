@@ -19,21 +19,24 @@ import java.util.Optional;
 @AllArgsConstructor
 public class UserController {
     private final ScheduleService scheduleService;
-    private final JwtService jwtService;
-    private final UserService service;
+    private final UserService userService;
     private final UserRepository userRepository;
 
     //private final CustomEvents customEvents;
 
     @GetMapping("/schedule")
     public List<Schedule> fetchSchedule(HttpServletRequest request) {
-        String username = getUsername(request);
+        String username = userService.getUsername(request);
         //String scheduleIdRef = service.getUserScheduleIdRef(username);
 
-        Optional<User> optionalUser = service.findByUsername(username);
+        Optional<User> optionalUser = userService.findByUsername(username);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            return scheduleService.getScheduleById(user.getScheduleIdRef()).map(List::of).orElse(null);
+            if (user.getScheduleIdRef() != null) {
+                return scheduleService.getScheduleById(user.getScheduleIdRef()).map(List::of).orElse(null);
+            } else {
+                return null;
+            }
         }
 
         return null;
@@ -41,8 +44,8 @@ public class UserController {
 
     @PostMapping("/settings")
     public ResponseEntity<String> changeSettings(HttpServletRequest request, @RequestBody SettingsData newSettingsData) {
-        String username = getUsername(request);
-        Optional<User> optionalUser  = service.findByUsername(username);
+        String username = userService.getUsername(request);
+        Optional<User> optionalUser  = userService.findByUsername(username);
 
         if (optionalUser.isEmpty()) {
             return ResponseEntity.badRequest().body("User not found");
@@ -57,12 +60,21 @@ public class UserController {
                 Schedule existingSchedule = optionalExistingSchedule.get();
                 user.setScheduleIdRef(existingSchedule.getId()); // Update user urlRefId to existing schedule id
             } else {
-                Status status = scheduleService.addOrUpdateSchedule(newSettingsData.getUrl());
-                if (status == Status.FAILED) {
-                    return ResponseEntity.badRequest().body("Invalid Schedule URL");
+                String similarScheduleId = scheduleService.getSimilarScheduleId(newSettingsData.getUrl());
+                if (similarScheduleId == null) {
+                    Status status = scheduleService.addOrUpdateSchedule(newSettingsData.getUrl());
+                    if (status == Status.FAILED) {
+                        System.out.println("Invalid Schedule URL");
+                        return ResponseEntity.badRequest().body("Invalid Schedule URL");
+                    } else {
+                        // Get new schedule by URL and set user scheduleIdRef to the new schedule
+                        scheduleService.getScheduleByUrl(newSettingsData.getUrl()).ifPresent(schedule -> user.setScheduleIdRef(schedule.getId()));
+                    }
                 } else {
-                    // Get schedule by URL and set user scheduleIdRef to the new schedule
-                    scheduleService.getScheduleByUrl(newSettingsData.getUrl()).ifPresent(schedule -> user.setScheduleIdRef(schedule.getId()));
+                    user.setScheduleIdRef(similarScheduleId);
+                    System.out.println("similar schedule found");
+                    System.out.println(scheduleService.getScheduleById(similarScheduleId));
+                    scheduleService.getScheduleById(similarScheduleId).ifPresent(schedule -> newSettingsData.setUrl(schedule.getUrl()));
                 }
             }
             user.setSettingsData(newSettingsData);
@@ -72,16 +84,22 @@ public class UserController {
         }
     }
 
-    private String getUsername(HttpServletRequest request) {
-        final String authHeader = request.getHeader("Authorization");
-        final String jwt = authHeader.substring(7);
-        return jwtService.extractUsername(jwt);
+    @GetMapping("/settings")
+    public ResponseEntity<SettingsData> getSettings(HttpServletRequest request) {
+        String username = userService.getUsername(request);
+        Optional<User> optionalUser  = userService.findByUsername(username);
+
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.badRequest().body(null);
+        }
+
+        return ResponseEntity.ok().body(optionalUser.get().getSettingsData());
     }
 
     @PostMapping("/hide-events")
     public ResponseEntity<List<Event>> updateCustomEvents(HttpServletRequest request, @RequestBody List<Event> hiddenevents) {
-        String username = getUsername(request);
-        String scheduleIdRef = service.getUserScheduleIdRef(username);
+        String username = userService.getUsername(request);
+        String scheduleIdRef = userService.getUserScheduleIdRef(username);
         //List<Event> customEventList = customEvents.createCustomEvents(hiddenevents,scheduleIdRef);
         //service.createCustomEvents(customEventList); //todo: har inte skapats än
         return new ResponseEntity<>(HttpStatus.CREATED);
@@ -89,8 +107,8 @@ public class UserController {
 
     @GetMapping("/hide-events")
     public ResponseEntity<List<Event>> getCustomEvents(HttpServletRequest request) {
-        String username = getUsername(request);
-        String scheduleIdRef = service.getUserScheduleIdRef(username);
+        String username = userService.getUsername(request);
+        String scheduleIdRef = userService.getUserScheduleIdRef(username);
 
         // Todo: get users schedule with hidden events
 
