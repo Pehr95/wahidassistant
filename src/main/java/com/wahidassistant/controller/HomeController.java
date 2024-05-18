@@ -36,4 +36,17 @@ public class HomeController {
         }
     }
 
+    @GetMapping("/hide-events")
+    public String hideEvents(HttpServletRequest request) {
+        String username = userService.getUsername(request);
+        if (username == null) {
+            return "templogin.html";
+        } else {
+            return "hide-events.html";
+        }
+    }
+
+
+
+
 }

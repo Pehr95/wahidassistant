@@ -1,16 +1,19 @@
 
 window.onload = fetchEvents();
 let popUpIsActive = false;
+let savedEvents;
 
+let events = [];
+let schedule;
 
 async function fetchEvents() {
     try {
         console.log("hej: " + document.cookie);
-        const response = await fetch('/api/v1/user/schedule', {method: 'GET', headers: {'Authorization': 'Bearer ' + getAuthToken()}});
-        const schedules = await response.json();
+        const response = await fetch('/api/v1/user/hide-events', {method: 'GET', headers: {'Authorization': 'Bearer ' + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzMjEiLCJpYXQiOjE3MTYwMjIxOTgsImV4cCI6MTcxNjEwODU5OH0.7ut_RahV62mQNVOsnOaciVG96iABpZWIBFpSc-CXiNQ"}});
+        schedule = await response.json();
         console.log("ok");
-        const schedule = schedules[0];
-        const events = schedule.events;
+        events = schedule.events;
+        savedEvents = JSON.stringify(events)
         displayEvents(events);
         console.log(events);
     } catch (error) {
@@ -21,7 +24,6 @@ async function fetchEvents() {
 
 function getAuthToken() {
     const cookies = document.cookie.split(';').map(cookie => cookie.trim());
-    console.log(cookies);
     for (const cookie of cookies) {
         const [name, value] = cookie.split('=');
         if (name === 'auth_token') {
@@ -31,6 +33,10 @@ function getAuthToken() {
     }
     console.log('No auth token found.')
     return null; // Return null if token is not found
+}
+
+function redirectToSettings() {
+    window.location.href = '/settings';
 }
 
 function logout() {
@@ -56,6 +62,17 @@ function deleteAllCookies() {
         var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
         document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=" + window.location.hostname;
     }
+}
+
+
+function markOrUnmarkEvent(event) {
+
+    if (!popUpIsActive) {
+        event.hidden = !event.hidden;
+        console.log(event.hidden);
+    }
+
+
 }
 
 
@@ -122,12 +139,18 @@ function displayEvents(events) {
     function makeLessonDiv(event) {
         const eventDiv = document.createElement('div');
         eventDiv.classList.add('eventContainer');
-        eventDiv.addEventListener('click', function() {showPopUp(event)});
         scheduleContainer.appendChild(eventDiv);
 
 
         const iconDiv = document.createElement('div');
         iconDiv.classList.add('iconContainer');
+        iconDiv.addEventListener('click', function() {markOrUnmarkEvent(event, iconDiv)});
+        if (event.hidden === true) {
+            iconDiv.classList.add('red');
+        } else {
+            iconDiv.classList.add('blue');
+        }
+        
         eventDiv.appendChild(iconDiv);
 
         const icon = document.createElement('img');
@@ -138,6 +161,7 @@ function displayEvents(events) {
 
         const infoTextDiv = document.createElement('div');
         infoTextDiv.classList.add('infoTextContainer');
+        infoTextDiv.addEventListener('click', function() {showPopUp(event)});
         eventDiv.appendChild(infoTextDiv);
 
 
@@ -150,7 +174,7 @@ function displayEvents(events) {
         boldRooms.textContent = "Rum: ";
         infoRooms.appendChild(boldRooms);
         infoRooms.appendChild(document.createTextNode(Object.keys(event.rooms).join(', ')));
-        infoTextDiv.appendChild(infoRooms);  
+        infoTextDiv.appendChild(infoRooms);
 
         const infoTeachers = document.createElement('p');
         const boldTeachers = document.createElement('span');
@@ -180,7 +204,6 @@ function displayEvents(events) {
 
     let popUpDiv; // Declare popUpDiv outside the function so it's accessible globally
 
-
     function showPopUp(event) {
         if (!popUpIsActive) {
             content = document.getElementById('scheduleContainer');
@@ -207,11 +230,7 @@ function displayEvents(events) {
         }
     }
 
-
-
     function makePopUpDiv(event) {
-
-        console.log(event);
         popUpDiv = document.createElement('div');
         popUpDiv.classList.add('popUp');
         popUpDiv.id = "popUp"; // Set an id for the popup
@@ -263,6 +282,44 @@ function displayEvents(events) {
         return swedishTime;
     }
 
+
+
+    function markOrUnmarkEvent(event, iconDiv) {
+        if (!popUpIsActive) {
+            event.hidden = !event.hidden; //toggle
+            iconDiv.classList.toggle('red');
+            iconDiv.classList.toggle('blue');
+            showSaveButton();
+        }
+    }
+}
+
+
+function saveHiddenEvents() {
+    schedule.events = events;
+    fetch("/api/v1/user/hide-events", {
+        method: "POST",
+        headers: {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + getAuthToken()
+        },
+        body: JSON.stringify(schedule)
+    })
+        .then(response => {
+            if (!response.ok) {
+                alert("Network response was not ok")
+                throw new Error("Network response was not ok");
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log("Data saved successfully:", data);
+            //alert("Data saved successfully: " + JSON.stringify(data))
+            window.location.href = '/';
+        })
+        .catch(error => {
+            console.error("Error saving data:", error);
+        });
 }
 
 let settingsDiv;
@@ -290,8 +347,20 @@ function closeSettingsPopUp(clickEvent) {
         document.removeEventListener('click', closeSettingsPopUp);
         popUpIsActive = false;
     }
+    const screenWidth = window.innerWidth;
+    console.log("Screen width:", screenWidth);
 }
 
 function redirect(path) {
     window.location.href = path;
+}
+
+function showSaveButton() {
+    saveButton = document.getElementById('saveButton');
+    if (savedEvents === JSON.stringify(events)) {
+        saveButton.style.display = 'none';
+
+    } else {
+        saveButton.style.display = 'block';
+    }
 }

@@ -125,10 +125,6 @@ header button {
 }
 
 
-.eventContainer.expanded {
-    height: 150px; /* Set to auto for dynamic height based on content */
-}
-
 
 .eventContainer p {
     font-size: 0.75em;
@@ -144,8 +140,15 @@ header button {
     display: flex;
     align-items: center;
     justify-content: center;
+}
+
+.blue {
     background-color: hsla(219, 100%, 70%);
 }
+.red {
+    background-color: #ff4e45;
+}
+
 
 /* Style for the popup */
 .popUp {
@@ -198,6 +201,7 @@ a:active {
     color: blue; /* You can set it to the same color as the normal state */
 }
 
+
 /* Style for the popup */
 .settingsPopUp {
     flex-direction: column;
@@ -232,4 +236,42 @@ a:active {
 
 .settingsPopUp button:hover {
     background-color: hsl(214, 61%, 60%); /* Change background color on hover */
+}
+
+
+
+
+#saveButton {
+    display: none;
+    position: fixed;
+    bottom: 20px; /* Adjust this value to move the button higher or lower */
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    background-color: #00ab66; /* Button background color */
+    color: #fff; /* Button text color */
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    z-index: 1000; /* Ensure the button is above other content */
+    font-size: 1.8em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Adding shadow */
+}
+
+#saveButton:active {
+    background-color: hsl(156, 100%, 24%); /* Button background color */ 
+    outline: none;
+}
+
+#saveButton:focus { 
+    outline: none;
+}
+
+.unClickableButton {
+    pointer-events: none; /* Disable pointer events */
+    background-color: #a1a1a1; /* Button background color */
+  }
+
+.green {
+    background-color: hsl(156, 100%, 34%); /* Button background color */
 }

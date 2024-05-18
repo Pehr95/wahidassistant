@@ -20,7 +20,7 @@ public class Main {
 			//scrapingScheduler.scrapeTester();
 			//scrapingScheduler.scrapeAndUpdateExistingSchedules();
 			//scrapingScheduler.cleanUpUnusedSchedules();
-			cronJobComponent.scrapeAndUpdateExistingSchedules();
+			//cronJobComponent.scrapeAndUpdateExistingSchedules();
 		};
 	}
 
