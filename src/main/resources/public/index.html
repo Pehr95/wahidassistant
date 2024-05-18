@@ -9,16 +9,32 @@
 </head>
 <body>
     <header>
-        <img id="logo" src="icon-logo.png" alt="Logo">
-        <button onclick="redirectToSettings()">
-            <img id="menu" src="icon-menu.png" alt="Menu">
-        </button>
-        <button onclick="logout()">
-            <img id="logout" src="icon-logout.png" alt="Logout">
-        </button>
+        <div id="logoAndMenuContainer">
+            <img id="logo" src="icon-logo.png" alt="Logo">
+            <button onclick="openSettingPopUp()">
+                <img id="menu" src="icon-menu.png" alt="Menu">
+            </button>
+        </div>
+        <div id="textWithLinesContainer">
+            <div class="text-with-lines">
+                <div class="line"></div>
+                <div class="text">HEM</div>
+                <div class="line"></div>
+            </div>
+            <span id="fake"></span>
+        </div>
+
     </header>
 
     <div id="scheduleContainer"></div>
 
+    <div class="settingsPopUp" id="settingsPopUp">
+        <button onclick="redirect('/hide-events')" id="hideEventsBtn">Anpassa schema</button>
+        <button onclick="redirect('/settings')" id="settingsBtn">Inställningar</button>
+        <button onclick="logout()" id="signOut">Logga ut</button>
+    </div>
+
 </body>
 </html>
+
+

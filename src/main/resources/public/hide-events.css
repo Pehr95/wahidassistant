@@ -1,51 +1,83 @@
 body {
-    padding-top: 100px;
+    padding-top: 103px;
     font-family: 'Verdana', 'Geneva', 'Tahoma', sans-serif;
     background-color: hsl(0, 0%, 95%);
     margin: 0;
+    -webkit-tap-highlight-color: transparent;
 }
+
 
 header {
     display: flex;
-    padding: 20px 0px;
+    flex-direction: column;
+    padding: 10px 0px;
+    padding-bottom: 7px;
     justify-content: space-between;
     align-items: center;
-    font-family: 'Courier', monospace;
+    font-family: 'Tahoma', 'Courier', 'monospace';
+    font-size: medium;
     box-shadow: 0 0 10px rgba(0, 0, 0, 0.6);
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    z-index: 1000; /* Ensure it's above other content */
+    z-index: 1000; /*Ensure it's above other content*/
     background-color: hsl(0, 0%, 95%);
 }
 
 
-header #logo{
-    margin: 0;
-    margin-left: 20px;
-    width: 15em;
+#textWithLinesContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 0;
 }
 
-header #menu{
-    margin: 0;
+#text-with-lines {
+    display: flex;
+    margin-top: 10px;
+    margin-right: 40px;
+    justify-content: flex-start; /* Adjust this value as needed */
+}
+
+#fake {
+    display: inline-block;
+    width: 15px;
+}
+
+#logoAndMenuContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 0;
+    width: 100%;
+    z-index: 1000; /* Ensure it's above other content */
+}
+
+.line {
+    flex: 1;
+    height: 2px;
+    background-color: #3174cd;
+}
+
+header #logo {
+    margin-left: auto; /* Center the logo */
+    margin-right: auto;
+    width: 13em;
+    padding-bottom: 10px;
+}
+
+header #menu {
     width: 1.5em;
 }
 
-header #logout{
-    margin: 0;
-    width: 1.5em;
-}
-
-header button{
-    margin-left: auto;
-    background-color: #ffffff;
-    color: white;
-    padding: 8px 8px;
+header button {
+    margin-top: 25px;
+    margin-right: 20px; /* Position the button on the right side with 10px margin */
+    padding: 0px 0px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-right: 20px;
     -webkit-tap-highlight-color: transparent;
 }
 
@@ -93,10 +125,6 @@ header button{
 }
 
 
-.eventContainer.expanded {
-    height: 150px; /* Set to auto for dynamic height based on content */
-}
-
 
 .eventContainer p {
     font-size: 0.75em;
@@ -118,7 +146,7 @@ header button{
     background-color: hsla(219, 100%, 70%);
 }
 .red {
-    background-color: red;
+    background-color: #ff4e45;
 }
 
 
@@ -171,4 +199,79 @@ header button{
 /* Define the color for the link when it's active (pressed) */
 a:active {
     color: blue; /* You can set it to the same color as the normal state */
+}
+
+
+/* Style for the popup */
+.settingsPopUp {
+    flex-direction: column;
+    align-items: center;
+    display: none;
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    /*width: 60%;*/
+    transform: translate(-50%, -50%);
+    background-color: transparent;
+    /*padding: 10px;*/
+    /*border: 1px solid #ccc;*/
+    border-radius: 10px;
+    /*box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);*/
+    z-index: 9999;
+}
+
+
+.settingsPopUp button {
+    margin-top: 18px; /* Adjust the spacing between buttons */
+    margin-bottom: 18px; /* Adjust the spacing between buttons */
+    padding: 10px 20px; /* Adjust button padding */
+    font-size: 16px; /* Adjust button font size */
+    border: 2px solid black; /* Add border to buttons */
+    border-radius: 50px; /* Add border radius to buttons */
+    background-color: #3174cd; /* Add background color to buttons */
+    cursor: pointer;
+    color: black;
+    font-weight: bold;
+}
+
+.settingsPopUp button:hover {
+    background-color: hsl(214, 61%, 60%); /* Change background color on hover */
+}
+
+
+
+
+#saveButton {
+    display: none;
+    position: fixed;
+    bottom: 20px; /* Adjust this value to move the button higher or lower */
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 10px 20px;
+    background-color: #00ab66; /* Button background color */
+    color: #fff; /* Button text color */
+    border: none;
+    border-radius: 30px;
+    cursor: pointer;
+    z-index: 1000; /* Ensure the button is above other content */
+    font-size: 1.8em;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5); /* Adding shadow */
+}
+
+#saveButton:active {
+    background-color: hsl(156, 100%, 24%); /* Button background color */ 
+    outline: none;
+}
+
+#saveButton:focus { 
+    outline: none;
+}
+
+.unClickableButton {
+    pointer-events: none; /* Disable pointer events */
+    background-color: #a1a1a1; /* Button background color */
+  }
+
+.green {
+    background-color: hsl(156, 100%, 34%); /* Button background color */
 }

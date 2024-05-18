@@ -1,11 +1,12 @@
 
 window.onload = fetchEvents();
+let popUpIsActive = false;
 
 
 async function fetchEvents() {
     try {
         console.log("hej: " + document.cookie);
-        const response = await fetch('http://localhost:8080/api/v1/user/schedule', {method: 'GET', headers: {'Authorization': 'Bearer ' + getAuthToken()}});
+        const response = await fetch('/api/v1/user/schedule', {method: 'GET', headers: {'Authorization': 'Bearer ' + getAuthToken()}});
         const schedules = await response.json();
         console.log("ok");
         const schedule = schedules[0];
@@ -32,24 +33,29 @@ function getAuthToken() {
     return null; // Return null if token is not found
 }
 
-function redirectToSettings() {
-    window.location.href = '/settings';
-}
-
 function logout() {
     // Delete the JWT cookie
-    deleteCookie('auth_token');
+    deleteAllCookies('auth_token');
 
     // Optionally clear other related storage if used
     localStorage.removeItem('auth_token');
     sessionStorage.removeItem('auth_token');
 
+
     // Redirect to login page or homepage after logging out
     window.location.href = '/'; // Adjust the URL as needed
 }
 
-function deleteCookie(name) {
-    document.cookie = name + '=; Max-Age=0; path=/; domain=' + window.location.hostname + '; secure; SameSite=Strict';
+
+function deleteAllCookies() {
+    var cookies = document.cookie.split(";");
+
+    for (var i = 0; i < cookies.length; i++) {
+        var cookie = cookies[i];
+        var eqPos = cookie.indexOf("=");
+        var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+        document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=" + window.location.hostname;
+    }
 }
 
 
@@ -140,16 +146,40 @@ function displayEvents(events) {
         infoTextDiv.appendChild(infoHeader);
 
         const infoRooms = document.createElement('p');
-        infoRooms.textContent = "Rum: " + Object.keys(event.rooms).join(', ');
+        const boldRooms = document.createElement('span');
+        boldRooms.textContent = "Rum: ";
+        infoRooms.appendChild(boldRooms);
+        infoRooms.appendChild(document.createTextNode(Object.keys(event.rooms).join(', ')));
         infoTextDiv.appendChild(infoRooms);  
 
         const infoTeachers = document.createElement('p');
-        infoTeachers.textContent = "Lärare: " + event.teachers.join(', ');
+        const boldTeachers = document.createElement('span');
+        boldTeachers.textContent = "Lärare: ";
+        infoTeachers.appendChild(boldTeachers);
+        // Append the teachers' names to the paragraph element
+        infoTeachers.appendChild(document.createTextNode(event.teachers.join(', ')));
         infoTextDiv.appendChild(infoTeachers);
+
+        const description = document.createElement('p');
+        let descriptionTextToModify = event.description
+        if (descriptionTextToModify.length > window.innerWidth/8.8) {
+            descriptionTextToModify = descriptionTextToModify.substring(0,window.innerWidth/8.8) + "..."
+        }
+        const boldDescription = document.createElement('span');
+        boldDescription.textContent = "Info: ";
+        description.appendChild(boldDescription);
+        description.appendChild((document.createTextNode(descriptionTextToModify)));
+
+        infoTextDiv.appendChild(description);
+
+        // Apply CSS styling to the span element to make it bold
+        boldTeachers.style.fontWeight = '600';
+        boldRooms.style.fontWeight = '600';
+        boldDescription.style.fontWeight = '600';
     }
 
     let popUpDiv; // Declare popUpDiv outside the function so it's accessible globally
-    let popUpIsActive = false;
+
 
     function showPopUp(event) {
         if (!popUpIsActive) {
@@ -176,6 +206,8 @@ function displayEvents(events) {
             popUpIsActive = false;
         }
     }
+
+
 
     function makePopUpDiv(event) {
 
@@ -220,7 +252,7 @@ function displayEvents(events) {
 
 
         descriptionParagraph = document.createElement('p');
-        descriptionParagraph.innerHTML = "<strong>Beskrivning: </strong>" + event.description;
+        descriptionParagraph.innerHTML = "<strong>Info: </strong>" + event.description;
         popUpDiv.appendChild(descriptionParagraph);
 
     }
@@ -230,4 +262,36 @@ function displayEvents(events) {
         const swedishTime = utcDate.toLocaleString('sv-SE', { timeZone: 'Europe/Stockholm', hour12: false });
         return swedishTime;
     }
+
+}
+
+let settingsDiv;
+function openSettingPopUp() {
+
+    if (!popUpIsActive) {
+        popUpIsActive = true;
+        settingsDiv = document.getElementById('settingsPopUp');
+        settingsDiv.style.display = 'flex';
+        content = document.getElementById('scheduleContainer');
+        content.style.filter = "blur(3px)";
+        // Delay adding the event listener to close the popup when clicked outside
+        setTimeout(function() {
+            document.addEventListener('click', closeSettingsPopUp);
+        }, 100);
+    }
+}
+function closeSettingsPopUp(clickEvent) {
+    const isClickedInsidePopup = settingsDiv.contains(clickEvent.target);
+    if (!isClickedInsidePopup) {
+        popUpIsActive = false;
+        content = document.getElementById('scheduleContainer');
+        content.style.filter = "none";
+        settingsDiv.style.display = 'none';
+        document.removeEventListener('click', closeSettingsPopUp);
+        popUpIsActive = false;
+    }
+}
+
+function redirect(path) {
+    window.location.href = path;
 }
