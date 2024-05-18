@@ -5,7 +5,7 @@ window.onload = fetchEvents();
 async function fetchEvents() {
     try {
         console.log("hej: " + document.cookie);
-        const response = await fetch('http://localhost:8080/api/v1/user/schedule', {method: 'GET', headers: {'Authorization': 'Bearer ' + getAuthToken()}});
+        const response = await fetch('http://localhost:8080/api/v1/user/schedule', {method: 'GET', headers: {'Authorization': 'Bearer ' + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzMjEiLCJpYXQiOjE3MTYwMjIxOTgsImV4cCI6MTcxNjEwODU5OH0.7ut_RahV62mQNVOsnOaciVG96iABpZWIBFpSc-CXiNQ"}});
         const schedules = await response.json();
         console.log("ok");
         const schedule = schedules[0];
@@ -50,6 +50,17 @@ function logout() {
 
 function deleteCookie(name) {
     document.cookie = name + '=; Max-Age=0; path=/; domain=' + window.location.hostname + '; secure; SameSite=Strict';
+}
+
+
+function markOrUnmarkEvent(event) {
+
+    if (!popUpIsActive) {
+        event.hidden = !event.hidden;
+        console.log(event.hidden);
+    }
+
+
 }
 
 
@@ -116,12 +127,18 @@ function displayEvents(events) {
     function makeLessonDiv(event) {
         const eventDiv = document.createElement('div');
         eventDiv.classList.add('eventContainer');
-        eventDiv.addEventListener('click', function() {showPopUp(event)});
         scheduleContainer.appendChild(eventDiv);
 
 
         const iconDiv = document.createElement('div');
         iconDiv.classList.add('iconContainer');
+        iconDiv.addEventListener('click', function() {markOrUnmarkEvent(event, iconDiv)});
+        if (event.hidden === true) {
+            iconDiv.classList.add('red');
+        } else {
+            iconDiv.classList.add('blue');
+        }
+        
         eventDiv.appendChild(iconDiv);
 
         const icon = document.createElement('img');
@@ -132,6 +149,7 @@ function displayEvents(events) {
 
         const infoTextDiv = document.createElement('div');
         infoTextDiv.classList.add('infoTextContainer');
+        infoTextDiv.addEventListener('click', function() {showPopUp(event)});
         eventDiv.appendChild(infoTextDiv);
 
 
@@ -229,5 +247,23 @@ function displayEvents(events) {
         const utcDate = new Date(utcTimeString);
         const swedishTime = utcDate.toLocaleString('sv-SE', { timeZone: 'Europe/Stockholm', hour12: false });
         return swedishTime;
+    }
+
+
+
+    function markOrUnmarkEvent(event, iconDiv) {
+
+
+        if (!popUpIsActive) {
+            event.hidden = !event.hidden; //toggle
+            console.log(event.hidden); 
+            console.log(events);
+            iconDiv.classList.toggle('red');
+            iconDiv.classList.toggle('blue');
+            console.log(iconDiv.classList)
+
+        }
+    
+    
     }
 }

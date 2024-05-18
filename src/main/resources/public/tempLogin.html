@@ -96,7 +96,7 @@
 
     function login(username, password) {
         // Make a request to authenticate endpoint
-        fetch('/api/v1/auth/authenticate', {
+        fetch('http://localhost:8080/api/v1/auth/authenticate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -115,7 +115,7 @@
             const jwt = data.token;
             alert('JWT: ' + jwt); // Display JWT in a popup
             // Redirect or show success message
-            //document.cookie = `auth_token=${jwt}; path=/`; //kommentera bort denna sen. Endast här för liveserver.
+            document.cookie = `auth_token=${jwt}; path=/`; //kommentera bort denna sen. Endast här för liveserver.
             console.log("cookies: " + document.cookie);
             window.location.href = '/';
         })
