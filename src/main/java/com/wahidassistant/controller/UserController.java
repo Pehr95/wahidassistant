@@ -38,7 +38,6 @@ public class UserController {
                 return null;
             }
         }
-
         return null;
     }
 
@@ -89,7 +88,7 @@ public class UserController {
         return ResponseEntity.ok().body(optionalUser.get().getSettingsData());
     }
 
-    @PostMapping("/hide-events")
+    @PostMapping("/hide-events") //Med Wahid & Amer
     public ResponseEntity<List<Event>> updateCustomEvents(HttpServletRequest request, @RequestBody Schedule newFullCustomSchedule) {
         String username = userService.getUsername(request);
         Optional<User> optionalUser = userService.findByUsername(username);
@@ -100,8 +99,6 @@ public class UserController {
 
         User user = optionalUser.get();
 
-
-
         if (scheduleService.updateUsersHiddenEventsFromFullCustomSchedule(newFullCustomSchedule, user)) {
             // Todo: Implement logic to update users custom events
             scheduleService.updateUsersCustomEvents(user);
@@ -110,7 +107,7 @@ public class UserController {
         return ResponseEntity.badRequest().body(null);
     }
 
-    @GetMapping("/hide-events")
+    @GetMapping("/hide-events") // Med Wahid & Amer
     public ResponseEntity<Schedule> getCustomEvents(HttpServletRequest request) {
         String username = userService.getUsername(request);
         Optional<User> optionalUser = userService.findByUsername(username);

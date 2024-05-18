@@ -36,7 +36,7 @@ public class ScheduleService {
 
     public Optional<Schedule> getScheduleByUrl(String url){return scheduleRepository.findScheduleByUrl(url);}
 
-    public Status addOrUpdateSchedule(String url) {
+    public Status addOrUpdateSchedule(String url) { //Med Wahid
         Status status = Status.FAILED;
         Schedule newSchedule = webScraper.scrapeSchedule(url);
 
@@ -85,7 +85,7 @@ public class ScheduleService {
     }
 
 
-    private boolean checkIfScheduleChanged(Schedule updatedSchedule) {
+    private boolean checkIfScheduleChanged(Schedule updatedSchedule) { //Med Wahid & Amer
         boolean haveChanged = false;
         Optional<Schedule> scheduleOptional = getScheduleByUrl(updatedSchedule.getUrl());
         if (scheduleOptional.isPresent()) {
@@ -103,6 +103,7 @@ public class ScheduleService {
     }
 
     // clean up unused schedules
+    // todo: se om nödvändigt att köra varje dag
     public void cleanUpUnusedSchedules() {
         List<Schedule> scheduleList = scheduleRepository.findAll();
         int counter = 0;
@@ -115,7 +116,7 @@ public class ScheduleService {
         System.out.println("Deleted " + counter + " unused schedules");
     }
 
-    public Schedule getUsersFullCustomSchedule(User user) {
+    public Schedule getUsersFullCustomSchedule(User user) { // Med Wahid & Amer
         Optional<Schedule> optionalSchedule = getScheduleById(user.getScheduleIdRef());
         ArrayList<Event> hiddenEvents = user.getHiddenEvents();
 
@@ -137,7 +138,7 @@ public class ScheduleService {
         return null;
     }
 
-    private boolean isEventsEqual(Event event1, Event event2) {
+    private boolean isEventsEqual(Event event1, Event event2) { //Med Wahid & Amer
 
         return event1.getCourseName().equals(event2.getCourseName()) &&
                 event1.getStartTime().equals(event2.getStartTime()) &&
@@ -146,7 +147,7 @@ public class ScheduleService {
                 event1.getTeachers().equals(event2.getTeachers());
     }
 
-    public boolean updateUsersHiddenEventsFromFullCustomSchedule(Schedule newFullCustomSchedule, User user) {
+    public boolean updateUsersHiddenEventsFromFullCustomSchedule(Schedule newFullCustomSchedule, User user) { // Med Wahid & Amer
         if (user == null) {
             return false;
         }
@@ -163,7 +164,7 @@ public class ScheduleService {
         return true;
     }
 
-    public void updateUsersCustomEvents(User user) {
+    public void updateUsersCustomEvents(User user) { // Med Wahid & Amer
         ArrayList<Event> hiddenEvents = user.getHiddenEvents();
         Optional<Schedule> optionalSchedule = getScheduleById(user.getScheduleIdRef());
         ArrayList<Event> customEvents = new ArrayList<>();
@@ -189,7 +190,7 @@ public class ScheduleService {
     }
 
 
-    public void updateAllRelevantUsersCustomEvents(String scheduleIdRef) {
+    public void updateAllRelevantUsersCustomEvents(String scheduleIdRef) { //Med Wahid & Amer
         Optional<List<User>> allUsers = userRepository.findUsersByScheduleIdRef(scheduleIdRef);
         if (allUsers.isPresent()) {
             for (User user : allUsers.get()) {

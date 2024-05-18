@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
 
-public class CustomEvents {
+public class CustomEvents { // Med Amer
     //todo: 1. KLARA! Kunna göra customEvents utifrån hiddenEvents,
     //          todo: adam skickar hiddenevents,
     //           vi har hiddenevents,
@@ -19,7 +19,7 @@ public class CustomEvents {
 
     ScheduleService scheduleService;
 
-    public List<Event> createCustomEvents(List<Event> hiddenEvents, String id){
+    public List<Event> createCustomEvents(List<Event> hiddenEvents, String id){ // Med Amer
         List<Event> customEvents = new ArrayList<>();
         Optional<Schedule> schedule = scheduleService.getScheduleById(id);
         List<Event> allEvents = schedule.get().getEvents();
