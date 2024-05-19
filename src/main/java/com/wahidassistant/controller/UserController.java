@@ -32,12 +32,21 @@ public class UserController {
         Optional<User> optionalUser = userService.findByUsername(username);
         if (optionalUser.isPresent()) {
             User user = optionalUser.get();
-            if (user.getScheduleIdRef() != null) {
-                return scheduleService.getScheduleById(user.getScheduleIdRef()).map(List::of).orElse(null);
+            if (user.getCustomEvents() != null) {
+                Optional<Schedule> optionalSchedule = scheduleService.getScheduleById(user.getScheduleIdRef());
+                if (optionalSchedule.isPresent()) {
+                    Schedule schedule = optionalSchedule.get();
+                    schedule.setEvents(user.getCustomEvents());
+                    return List.of(schedule);
+                } else {
+                    return null;
+                }
+
             } else {
-                return null;
+                return scheduleService.getScheduleById(user.getScheduleIdRef()).map(List::of).orElse(null);
             }
         }
+
         return null;
     }
 
@@ -66,10 +75,12 @@ public class UserController {
                 } else {
                     // Get new schedule by URL and set user scheduleIdRef to the new schedule
                     scheduleService.getScheduleByUrl(newSettingsData.getUrl()).ifPresent(schedule -> user.setScheduleIdRef(schedule.getId()));
+                    scheduleService.updateUsersCustomEvents(user);
                 }
             }
             user.setSettingsData(newSettingsData);
             userRepository.save(user);
+            scheduleService.updateUsersCustomEvents(user);
 
             return ResponseEntity.ok().body(newSettingsData);
             //return ResponseEntity.ok().body("Settings for " + username + " changed to: " + newSettingsData);
@@ -88,7 +99,7 @@ public class UserController {
         return ResponseEntity.ok().body(optionalUser.get().getSettingsData());
     }
 
-    @PostMapping("/hide-events") //Med Wahid & Amer
+    @PostMapping("/hide-events")
     public ResponseEntity<List<Event>> updateCustomEvents(HttpServletRequest request, @RequestBody Schedule newFullCustomSchedule) {
         String username = userService.getUsername(request);
         Optional<User> optionalUser = userService.findByUsername(username);
@@ -99,6 +110,7 @@ public class UserController {
 
         User user = optionalUser.get();
 
+
         if (scheduleService.updateUsersHiddenEventsFromFullCustomSchedule(newFullCustomSchedule, user)) {
             // Todo: Implement logic to update users custom events
             scheduleService.updateUsersCustomEvents(user);
@@ -107,7 +119,7 @@ public class UserController {
         return ResponseEntity.badRequest().body(null);
     }
 
-    @GetMapping("/hide-events") // Med Wahid & Amer
+    @GetMapping("/hide-events")
     public ResponseEntity<Schedule> getCustomEvents(HttpServletRequest request) {
         String username = userService.getUsername(request);
         Optional<User> optionalUser = userService.findByUsername(username);

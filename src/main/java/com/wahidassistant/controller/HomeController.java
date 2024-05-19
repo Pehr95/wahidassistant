@@ -36,14 +36,17 @@ public class HomeController {
         }
     }
 
-    @GetMapping ("/index.html")
-    public String indexpage(HttpServletRequest request){
+    @GetMapping("/hide-events")
+    public String hideEvents(HttpServletRequest request) {
         String username = userService.getUsername(request);
         if (username == null) {
             return "templogin.html";
         } else {
-            return "index.html"; //ändrade till index innan returna den till settings.
+            return "hide-events.html";
         }
     }
+
+
+
 
 }
