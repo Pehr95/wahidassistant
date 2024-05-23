@@ -9,7 +9,7 @@ let schedule;
 async function fetchEvents() {
     try {
         console.log("hej: " + document.cookie);
-        const response = await fetch('/api/v1/user/hide-events', {method: 'GET', headers: {'Authorization': 'Bearer ' + "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiIzMjEiLCJpYXQiOjE3MTYwMjIxOTgsImV4cCI6MTcxNjEwODU5OH0.7ut_RahV62mQNVOsnOaciVG96iABpZWIBFpSc-CXiNQ"}});
+        const response = await fetch('/api/v1/user/hide-events', {method: 'GET', headers: {'Authorization': 'Bearer ' + getAuthToken()}});
         schedule = await response.json();
         console.log("ok");
         events = schedule.events;

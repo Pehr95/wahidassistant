@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings Page</title>
+    <link rel="stylesheet" href="test.css">
+</head>
+<body>
+    <div id="settings-container">
+        <div class="input-group">
+            <label for="transport">Choose Transportation:</label>
+            <select id="transport">
+                <option value="none">None</option>
+                <option value="bus">Bus</option>
+                <option value="bike">Bike</option>
+                <option value="bus_bike">Bus and Bike</option>
+            </select>
+        </div>
+
+        <div class="input-group">
+            <label for="url">Enter URL:</label>
+            <input type="text" id="url">
+        </div>
+
+        <div class="input-group">
+            <label for="address">Enter Address:</label>
+            <input type="text" id="address">
+        </div>
+
+        <button id="saveButton">Save</button>
+    </div>
+
+    <script src="test.js"></script>
+</body>
+</html>
