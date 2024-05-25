@@ -15,7 +15,6 @@ import java.util.List;
 @Component
 @AllArgsConstructor
 public class CronJobComponent {
-    private final WebScraper webScraper;
     private final ScheduleRepository scheduleRepository;
     private final ScheduleService scheduleService;
 
