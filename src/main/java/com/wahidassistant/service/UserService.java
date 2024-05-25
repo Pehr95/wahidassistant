@@ -2,6 +2,7 @@ package com.wahidassistant.service;
 
 import com.wahidassistant.config.JwtService;
 import com.wahidassistant.model.Schedule;
+import com.wahidassistant.model.SettingsData;
 import com.wahidassistant.model.User;
 import com.wahidassistant.repository.UserRepository;
 import jakarta.servlet.http.Cookie;
@@ -46,8 +47,5 @@ public class UserService {
 
         return jwtService.extractUsername(authHeader.substring(7));
     }
-
-
-
     //todo: skapa metod som säger den ska spara customEvents.Efter attributen finns i databasen
 }

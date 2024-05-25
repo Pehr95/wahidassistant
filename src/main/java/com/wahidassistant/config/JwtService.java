@@ -1,6 +1,7 @@
 package com.wahidassistant.config;
 
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
@@ -47,6 +48,18 @@ public class JwtService {
     }
 
     public boolean isTokenExpired(String token) {
+        /*
+        Wahids testlösning inte ännu klar måste hantera ifall token ä rexpired så den skickar till startsidan
+        try {
+            Claims claims = Jwts.parserBuilder().setSigningKey(SECRET_KEY).build().parseClaimsJws(token).getBody();
+            Date expiration = claims.getExpiration();
+            return expiration.before(new Date());
+        }catch (ExpiredJwtException e){
+            e.printStackTrace();
+            return true;
+        }
+
+         */
         return extractExpiration(token).before(new Date());
     } // Med Wahid
 

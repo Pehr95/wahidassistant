@@ -1,10 +1,7 @@
 package com.wahidassistant.service;
 
 import com.wahidassistant.component.WebScraper;
-import com.wahidassistant.model.Event;
-import com.wahidassistant.model.Schedule;
-import com.wahidassistant.model.Status;
-import com.wahidassistant.model.User;
+import com.wahidassistant.model.*;
 import com.wahidassistant.repository.ScheduleRepository;
 import com.wahidassistant.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,10 +10,7 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @AllArgsConstructor
@@ -184,6 +178,9 @@ public class ScheduleService {
                     customEvents.add(event);
                 }
             }
+
+            //TODO:
+            //customEvents = updateCustomWithTravelEvents(user, customEvents);
             user.setCustomEvents(customEvents);
             userRepository.save(user);
         }
@@ -191,11 +188,46 @@ public class ScheduleService {
 
 
     public void updateAllRelevantUsersCustomEvents(String scheduleIdRef) { //Med Wahid & Amer
-        Optional<List<User>> allUsers = userRepository.findUsersByScheduleIdRef(scheduleIdRef);
+        Optional<List<User>> allUsers = userRepository.findUsersByScheduleIdRef(scheduleIdRef); //Man ska inte göra så
         if (allUsers.isPresent()) {
             for (User user : allUsers.get()) {
                 updateUsersCustomEvents(user);
             }
         }
+    }
+
+    public ArrayList<Event> updateCustomWithTravelEvents(User user , ArrayList<Event> customEvents){
+
+        SettingsData settingsData = user.getSettingsData();
+        String address = settingsData.getAddress();
+        String postalcode = settingsData.getPostalCode();
+        PreferredTransportation preferredTransportation = user.getPreferredTransportation();
+
+
+    }
+
+    public ArrayList<Event> getTwoDaysFirstAndLastEvents(ArrayList<Event> customEvents){
+        ArrayList<Event> fourEventsOfImportance = new ArrayList<>();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DATE, 2);
+
+        Date dateTwoDaysAfter = calendar.getTime();
+
+        calendar.add(Calendar.DATE,1);
+
+        Date dateOneDayAfter = calendar.getTime();
+
+        //loopa igenom två dagar få ut första event av dagen och sista event av dagen
+        for (Event event : customEvents){
+            if(!dateTwoDaysAfter.after(event.getStartTime())){
+
+                if (!dateOneDayAfter.after(event.getStartTime()){
+                    fourEventsOfImportance.add(event);
+                }
+            }
+        }
+
     }
 }
