@@ -1,108 +1,99 @@
 package com.wahidassistant.component;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.time.Duration;
+import java.util.Date;
+import java.util.TimeZone;
+
 import com.google.maps.DirectionsApi;
 import com.google.maps.GeoApiContext;
-import com.google.maps.model.*;
-import com.wahidassistant.model.BusTrip;
-import org.jetbrains.annotations.NotNull;
-import java.sql.Timestamp;
-import java.time.Instant;
-import java.util.ArrayList;
-import java.util.List;
+import com.google.maps.model.DirectionsResult;
+import com.google.maps.model.DirectionsStep;
+import com.google.maps.model.TravelMode;
+import com.wahidassistant.model.BusEvent;
+
 
 public class TravelComponent {
+
     private final GeoApiContext context;
 
     String apiKey = "AIzaSyANvrEPWoFWNrnB4rHNBhEVy9Wgs43nc80";
 
     public TravelComponent() {
         context = new GeoApiContext.Builder().apiKey(apiKey).build();
+        getBusInfo("Båtbyggaregatan 32, 21642, Sweden", "Nordenskiöldsgatan 4, Malmö, Sweden");
+        getBikeInfo("Båtbyggaregatan 32, 21642, Sweden", "Nordenskiöldsgatan 4, Malmö, Sweden");
     }
 
-    public int transportTime (TravelMode type, String originAddress, String destinationAddress) {
-        int transportTimeInMinutes = 0;
+    public void getBikeInfo(String originAddress, String destinationAddress) {
         try {
             DirectionsResult directions = DirectionsApi.getDirections(context, originAddress, destinationAddress)
-                    .mode(type)
+                    .mode(TravelMode.BICYCLING)
                     .await();
-            transportTimeInMinutes = (int) (directions.routes[0].legs[0].duration.inSeconds / 60);
+            System.out.println("Time to bike: " + directions.routes[0].legs[0].duration.inSeconds / 60 + " minutes");
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return transportTimeInMinutes;
-    }
-
-    public Timestamp busArrivalTime(TravelMode type, String originAddress, String destinationAddress, Instant arrivalTime) {
-        Timestamp busArrivalTime = null;
-        try {
-            DirectionsResult directions = DirectionsApi.getDirections(context, originAddress, destinationAddress)
-                    .mode(type)
-                    .arrivalTime(arrivalTime)
-                    .await();
-            long arrivalTimeMillis = directions.routes[0].legs[0].arrivalTime.getSecond() * 1000;
-            busArrivalTime = new Timestamp(arrivalTimeMillis);
-        } catch (Exception e) {
-            e.printStackTrace();
         }
-        return busArrivalTime;
-    }
 
-    public List<BusTrip> getBusTrips(String originAddress, String destinationAddress, Instant arrivalTime){
-        List<BusTrip> busTrips = new ArrayList<>();
+
+    // "Censorsgatan 3, 21550, Sweden"
+
+    public void getBusInfo (String originAddress, String destinationAddress) {
         try {
+            Date testDate = makeDate();
             DirectionsResult directions = DirectionsApi.getDirections(context, originAddress, destinationAddress)
                     .mode(TravelMode.TRANSIT)
-                    .arrivalTime(arrivalTime)
+                    .arrivalTime(testDate.toInstant())
                     .await();
-            for (DirectionsRoute route : directions.routes) {
-                for (DirectionsLeg leg : route.legs) {
-                    for (DirectionsStep step : leg.steps) {
-                        if (step.travelMode.equals(TravelMode.TRANSIT)) {
-                            TransitDetails transitDetails = step.transitDetails;
-                            if (transitDetails != null) {
-                                BusTrip busTrip = getBusTrip(transitDetails);
-                                busTrips.add(busTrip);
-                            }
-                        }
-                    }
+
+            for(DirectionsStep step : directions.routes[0].legs[0].steps) {
+                if (step.travelMode.equals(TravelMode.TRANSIT)) {
+                    System.out.println("Transit");
+                    String busNr = step.transitDetails.line.shortName;
+                    String busName = step.transitDetails.headsign;
+                    Date departureTime = Date.from(step.transitDetails.departureTime.toInstant());
+                    Date arrivalTime = Date.from(step.transitDetails.arrivalTime.toInstant());
+                    String duration = String.valueOf(Duration.between(step.transitDetails.departureTime, step.transitDetails.arrivalTime).toMinutes());
+                    String origin = step.transitDetails.departureStop.name;
+                    String destination = step.transitDetails.arrivalStop.name;
+                    BusEvent busEvent = new BusEvent(busNr, busName, departureTime, arrivalTime, duration, origin, destination, 0);
+                    System.out.println(busEvent);
                 }
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return busTrips;
     }
 
-    @NotNull
-    private static BusTrip getBusTrip(TransitDetails transitDetails) {
-        BusTrip busTrip = new BusTrip();
-        busTrip.setBusNumber(transitDetails.line.shortName);
-        busTrip.setBusName(transitDetails.line.name);
-        busTrip.setDepartureTime(new Timestamp(transitDetails.departureTime.getSecond() * 1000));
-        busTrip.setArrivalTime(new Timestamp(transitDetails.arrivalTime.getSecond() * 1000));
-        int durationInMinutes = transitDetails.arrivalTime.getMinute() - transitDetails.departureTime.getMinute();
-        busTrip.setDurationInMinutes(durationInMinutes);
-        return busTrip;
-    }
+    public Date makeDate() {
+        String dateString = "2024-05-16T06:15:00.000+00:00";
+        Date date = null;
 
-    public int getTotalTravelTime(List<BusTrip> busTrips){
-        int totalTravelTime = 0;
-        for(BusTrip busTrip : busTrips){
-            totalTravelTime += busTrip.getDurationInMinutes();
+        try {
+            // Define the date format
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX");
+
+            // Set the time zone to UTC
+            sdf.setTimeZone(TimeZone.getTimeZone("UTC"));
+
+            // Parse the string into a Date object
+            date = sdf.parse(dateString);
+
+            // Print the Date object
+            System.out.println("Date: " + date);
+            date.setTime(date.getTime() - 5*60*1000);
+        } catch (ParseException e) {
+            System.out.println("Error parsing date: " + e.getMessage());
         }
-        return totalTravelTime;
+
+        return date;
     }
 
+    public static void main(String[] args) {
+        TravelComponent travelComponent = new TravelComponent();
 
-
-    //todo: Få ut första dagens event, få ut eventets tid, skapa bus event och lägg in i mongodb som BusEvent innan eventet i personliga schedule.
-    /*
-    public BusEvent busEventbeforeEvent(Event event, User user){
-
-        user.getCustomEvents.getfirst
-
-        BusEvent busEvent = new BusEvent();
-        return busEvent;
     }
-
-     */
 }

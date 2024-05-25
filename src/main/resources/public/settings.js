@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
     const returnButton = document.getElementById("return");
     returnButton.addEventListener("click", function(){
-        window.location.href = "/" // funkar ens detta ?
+        window.location.href = "/" // funkar ens detta ? NEJ
     });
     
     const saveButton = document.getElementById("saveButton");

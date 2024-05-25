@@ -28,7 +28,7 @@ public class User implements UserDetails {
     private ArrayList<Event> customEvents;
     private ArrayList<Event> hiddenEvents;
 
-    private int timeToBikeToUniversity; // This sets in minutes when address is updated
+    private int timeToBikeToUniversity; // This sets in minutes when address is updated. No it doesnt
     private SettingsData settingsData;
 
     @Override

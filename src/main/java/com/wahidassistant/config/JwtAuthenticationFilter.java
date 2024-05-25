@@ -45,8 +45,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 for (Cookie cookie : cookies) {
                     // Check for "auth_token" cookie by name
                     if ("auth_token".equals(cookie.getName())) {
-                        username =  jwtService.extractUsername(cookie.getValue());
-                        jwt = cookie.getValue();
+                        //if (!jwtService.isTokenExpired(cookie.getValue())){
+                            username =  jwtService.extractUsername(cookie.getValue());
+                            jwt = cookie.getValue();
+                        //}
+
                     }
                 }
             }

@@ -24,7 +24,7 @@ public class UserController {
 
     //private final CustomEvents customEvents;
 
-    @GetMapping("/schedule")
+    @GetMapping("/schedule") // skickar in CustomEvents
     public List<Schedule> fetchSchedule(HttpServletRequest request) {
         String username = userService.getUsername(request);
         //String scheduleIdRef = service.getUserScheduleIdRef(username);

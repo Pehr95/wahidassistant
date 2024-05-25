@@ -22,7 +22,7 @@ public class WebScraper {
     private final Map<String, Integer> monthConversion = makeMonthConversionHashMap();
     private HashMap<String, String> columnNumbers = new HashMap<>();
 
-    public Schedule scrapeSchedule(String url) {
+    public Schedule scrapeSchedule(String url) { // Med Wahid
         int weeksAhead = 2; // How many weeks ahead to scrape
         // Todo: felhantering. Kolla om dokumentet har rätt typ av format samt att datum formattering är korrekt.
 
@@ -151,7 +151,7 @@ public class WebScraper {
         }
     }
 
-    private Document fetchDocument(String url) {
+    private Document fetchDocument(String url) { //Med Wahid
         try {
             return Jsoup.connect(url).get();
         } catch (Exception e) {
