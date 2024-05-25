@@ -1,0 +1,129 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background: url('bakgrund.png') no-repeat center center fixed;
+    background-size: cover;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden; 
+}
+
+@keyframes backgroundScroll {
+    from {background-position: 200 100;}
+    to {background-position: 100% 0%;}
+}
+
+body {
+    animation: backgroundScroll 20s linear infinite;
+}
+
+.formContainer {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.5);
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 300px;
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #000000;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: none;
+    border-radius: 5px;
+    background-color: #3174cd;
+    color: #fff;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+.hidden {
+    display: none;
+}
+
+.logo {
+    width: 100%;
+    display: flex;
+    justify-content: left;
+    margin-left: 0px;
+    max-width: 300px;
+    margin-bottom: 20px;
+}
+
+#registerBtn {
+    width: 190px;
+    margin-top: 0px;
+}
+#backBtn {
+    margin-top: 0px;
+}
+.error-message {
+    display: none;
+    align-items: center;
+    color: red;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+.error-icon {
+    width: 20px;
+    height: 20px;
+    margin-right: 5px;
+    display: block;
+}
+.password-container {
+    position: relative;
+    width: 100%;
+}
+
+.toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    width: 20px;
+    height: 20px;
+}
+
+@media (max-width: 600px) {
+    .formContainer {
+        width: 90%;
+        padding: 15px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    button {
+        padding: 8px;
+        margin: 8px 0;
+    }
+
+    .logo {
+        width: 80%;
+    }
+
+    .toggle-password {
+        width: 15px;
+        height: 15px;
+    }
+
+    .error-message {
+        font-size: 12px;
+    }
+}
