@@ -1,10 +1,7 @@
 package com.wahidassistant.service;
 
 import com.wahidassistant.component.WebScraper;
-import com.wahidassistant.model.Event;
-import com.wahidassistant.model.Schedule;
-import com.wahidassistant.model.Status;
-import com.wahidassistant.model.User;
+import com.wahidassistant.model.*;
 import com.wahidassistant.repository.ScheduleRepository;
 import com.wahidassistant.repository.UserRepository;
 import jakarta.servlet.http.HttpServletRequest;
@@ -13,10 +10,7 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 
 @AllArgsConstructor
@@ -36,7 +30,7 @@ public class ScheduleService {
 
     public Optional<Schedule> getScheduleByUrl(String url){return scheduleRepository.findScheduleByUrl(url);}
 
-    public Status addOrUpdateSchedule(String url) {
+    public Status addOrUpdateSchedule(String url) { //Med Wahid
         Status status = Status.FAILED;
         Schedule newSchedule = webScraper.scrapeSchedule(url);
 
@@ -85,7 +79,7 @@ public class ScheduleService {
     }
 
 
-    private boolean checkIfScheduleChanged(Schedule updatedSchedule) {
+    private boolean checkIfScheduleChanged(Schedule updatedSchedule) { //Med Wahid & Amer
         boolean haveChanged = false;
         Optional<Schedule> scheduleOptional = getScheduleByUrl(updatedSchedule.getUrl());
         if (scheduleOptional.isPresent()) {
@@ -103,6 +97,7 @@ public class ScheduleService {
     }
 
     // clean up unused schedules
+    // todo: se om nödvändigt att köra varje dag
     public void cleanUpUnusedSchedules() {
         List<Schedule> scheduleList = scheduleRepository.findAll();
         int counter = 0;
@@ -115,7 +110,7 @@ public class ScheduleService {
         System.out.println("Deleted " + counter + " unused schedules");
     }
 
-    public Schedule getUsersFullCustomSchedule(User user) {
+    public Schedule getUsersFullCustomSchedule(User user) { // Med Wahid & Amer
         Optional<Schedule> optionalSchedule = getScheduleById(user.getScheduleIdRef());
         ArrayList<Event> hiddenEvents = user.getHiddenEvents();
 
@@ -137,7 +132,7 @@ public class ScheduleService {
         return null;
     }
 
-    private boolean isEventsEqual(Event event1, Event event2) {
+    private boolean isEventsEqual(Event event1, Event event2) { //Med Wahid & Amer
 
         return event1.getCourseName().equals(event2.getCourseName()) &&
                 event1.getStartTime().equals(event2.getStartTime()) &&
@@ -146,7 +141,7 @@ public class ScheduleService {
                 event1.getTeachers().equals(event2.getTeachers());
     }
 
-    public boolean updateUsersHiddenEventsFromFullCustomSchedule(Schedule newFullCustomSchedule, User user) {
+    public boolean updateUsersHiddenEventsFromFullCustomSchedule(Schedule newFullCustomSchedule, User user) { // Med Wahid & Amer
         if (user == null) {
             return false;
         }
@@ -163,7 +158,7 @@ public class ScheduleService {
         return true;
     }
 
-    public void updateUsersCustomEvents(User user) {
+    public void updateUsersCustomEvents(User user) { // Med Wahid & Amer
         ArrayList<Event> hiddenEvents = user.getHiddenEvents();
         Optional<Schedule> optionalSchedule = getScheduleById(user.getScheduleIdRef());
         ArrayList<Event> customEvents = new ArrayList<>();
@@ -183,18 +178,56 @@ public class ScheduleService {
                     customEvents.add(event);
                 }
             }
+
+            //TODO:
+            //customEvents = updateCustomWithTravelEvents(user, customEvents);
             user.setCustomEvents(customEvents);
             userRepository.save(user);
         }
     }
 
 
-    public void updateAllRelevantUsersCustomEvents(String scheduleIdRef) {
-        Optional<List<User>> allUsers = userRepository.findUsersByScheduleIdRef(scheduleIdRef);
+    public void updateAllRelevantUsersCustomEvents(String scheduleIdRef) { //Med Wahid & Amer
+        Optional<List<User>> allUsers = userRepository.findUsersByScheduleIdRef(scheduleIdRef); //Man ska inte göra så
         if (allUsers.isPresent()) {
             for (User user : allUsers.get()) {
                 updateUsersCustomEvents(user);
             }
         }
+    }
+
+    public ArrayList<Event> updateCustomWithTravelEvents(User user , ArrayList<Event> customEvents){
+
+        SettingsData settingsData = user.getSettingsData();
+        String address = settingsData.getAddress();
+        String postalcode = settingsData.getPostalCode();
+        PreferredTransportation preferredTransportation = user.getPreferredTransportation();
+
+
+    }
+
+    public ArrayList<Event> getTwoDaysFirstAndLastEvents(ArrayList<Event> customEvents){
+        ArrayList<Event> fourEventsOfImportance = new ArrayList<>();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.add(Calendar.DATE, 2);
+
+        Date dateTwoDaysAfter = calendar.getTime();
+
+        calendar.add(Calendar.DATE,1);
+
+        Date dateOneDayAfter = calendar.getTime();
+
+        //loopa igenom två dagar få ut första event av dagen och sista event av dagen
+        for (Event event : customEvents){
+            if(!dateTwoDaysAfter.after(event.getStartTime())){
+
+                if (!dateOneDayAfter.after(event.getStartTime()){
+                    fourEventsOfImportance.add(event);
+                }
+            }
+        }
+
     }
 }

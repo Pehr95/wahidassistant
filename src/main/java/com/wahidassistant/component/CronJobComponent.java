@@ -15,7 +15,6 @@ import java.util.List;
 @Component
 @AllArgsConstructor
 public class CronJobComponent {
-    private final WebScraper webScraper;
     private final ScheduleRepository scheduleRepository;
     private final ScheduleService scheduleService;
 
@@ -28,7 +27,7 @@ public class CronJobComponent {
 
     // scrape and save every 4 hours
     @Scheduled(cron = "0 0 */4 * * *")
-    public void scrapeAndUpdateExistingSchedules() {
+    public void scrapeAndUpdateExistingSchedules() { // Med Wahid
         List<Schedule> scheduleList = scheduleRepository.findAll();
 
         // Loop through all schedules and check if they have changed

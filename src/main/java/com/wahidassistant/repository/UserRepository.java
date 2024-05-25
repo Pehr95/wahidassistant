@@ -1,6 +1,7 @@
 package com.wahidassistant.repository;
 
 import com.wahidassistant.model.Event;
+import com.wahidassistant.model.SettingsData;
 import com.wahidassistant.model.User;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.data.mongodb.repository.Query;
@@ -25,6 +26,10 @@ public interface UserRepository extends MongoRepository<User, String> {
     // find all users with a specific schedule id
     Optional<List<User>> findUsersByScheduleIdRef(String id);
 
+    /*
+    @Query (value = "{ 'username' : ?0 }" , fields = "{ 'settingsData' : 1 }")
+    Optional<SettingsData> findSettingsDataByUsername (String username);
 
+     */
 
 }

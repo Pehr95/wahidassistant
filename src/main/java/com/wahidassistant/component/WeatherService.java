@@ -20,7 +20,7 @@ import java.util.regex.Pattern;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
-
+// It's not implemented
 public class WeatherService {
     String metObsAPI = "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/13.095703/lat/55.519302/data.json";
 
