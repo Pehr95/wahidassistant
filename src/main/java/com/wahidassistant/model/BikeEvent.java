@@ -7,12 +7,9 @@ import java.util.Date;
 
 @AllArgsConstructor
 @Data
-public class BikeEvent {
+public class BikeEvent /*extends Event*/ {
     //todo: fixa den
     private Date departureTime;
     private Date arrivalTime;
     private String durationInMinutes;
-    private String origin; //location of departure
-    private String destination; //location of arrival
-    private int preferredArrivalTime;
 }

@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", function() {
         toggleIcon.addEventListener('click', function() {
             const type = inputField.getAttribute('type') === 'password' ? 'text' : 'password';
             inputField.setAttribute('type', type);
-            this.src = type === 'password' ? 'eye.png' : 'hide.png';
+            this.src = type === 'password' ? 'icon-eye.png' : 'icon-hide.png';
         });
     }
 
@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", function() {
     const registerErrorContainer = document.getElementById("registerError");
 
     function login(username, password) {
-        fetch('http://192.168.1.70:8080/api/v1/auth/authenticate', {
+        fetch('/api/v1/auth/authenticate', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -45,10 +45,10 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(data => {
             const jwt = data.token;
-            alert('JWT: ' + jwt);
+            //alert('JWT: ' + jwt);
             document.cookie = `auth_token=${jwt}; path=/`; 
             console.log("cookies: " + document.cookie);
-            window.location.href = 'index.html';
+            window.location.href = '/';
         })
         .catch(error => {
             loginError.textContent = 'Felaktigt användarnamn eller lösenord';
@@ -57,7 +57,7 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 
     function register(username, password) {
-        fetch('http://localhost:8080/api/v1/auth/register', {
+        fetch('/api/v1/auth/register', {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -75,15 +75,11 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(data => {
             const jwt = data.token;
-            alert('JWT: ' + jwt);
-            window.location.href = 'settings.html';
+            //alert('JWT: ' + jwt);
+            window.location.href = '/settings';
         })
         .catch(error => {
-            if (error.message === 'Username already exists') {
-                registerError.textContent = 'Användarnamnet finns redan';
-            } else {
-                registerError.textContent = 'Registreringen misslyckades';
-            }
+            registerError.textContent = 'Användarnamnet används redan!';
             registerErrorContainer.style.display = 'flex';
         });
     }

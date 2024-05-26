@@ -15,17 +15,22 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfig { // apply a security configuration to the web application.
 
     private final JwtAuthenticationFilter jwtAuthFilter;
     private final AuthenticationProvider authenticationProvider;
+
+    // Configures security settings for HTTP requests.
+    // Disables CSRF protection, sets up authorization rules,
+    // configures stateless session management,
+    // specifies authentication provider, and adds JWT authentication filter. Author Pehr Nortén.
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/api/v1/auth/**", "/error", "/", "/icon**", "/settings", "/templogin.html", "/hide-events").permitAll()
+                        .requestMatchers("/api/v1/auth/**", "/error", "/", "/icon**", "/settings", "/templogin.html", "/hide-events", "/login**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .sessionManagement(sess -> sess.sessionCreationPolicy(SessionCreationPolicy.STATELESS))

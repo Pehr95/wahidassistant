@@ -1,5 +1,6 @@
 package com.wahidassistant.service;
 
+import com.wahidassistant.component.TravelComponent;
 import com.wahidassistant.component.WebScraper;
 import com.wahidassistant.model.*;
 import com.wahidassistant.repository.ScheduleRepository;
@@ -10,6 +11,7 @@ import org.springframework.http.converter.StringHttpMessageConverter;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.text.SimpleDateFormat;
 import java.util.*;
 
 
@@ -20,6 +22,7 @@ public class ScheduleService {
     private final UserRepository userRepository;
     private final UserService userService;
     private final WebScraper webScraper;
+    //private final TravelComponent travelComponent;
     private final StringHttpMessageConverter stringHttpMessageConverter;
 
     public List<Schedule> getAllSchedules() {
@@ -180,7 +183,13 @@ public class ScheduleService {
             }
 
             //TODO:
-            //customEvents = updateCustomWithTravelEvents(user, customEvents);
+            /*
+            if (user.getSettingsData().getPreferredTransportation() != PreferredTransportation.NONE){
+                customEvents = updateCustomWithTravelEvents(user, customEvents);
+            }
+
+             */
+
             user.setCustomEvents(customEvents);
             userRepository.save(user);
         }
@@ -195,39 +204,102 @@ public class ScheduleService {
             }
         }
     }
-
+/*
     public ArrayList<Event> updateCustomWithTravelEvents(User user , ArrayList<Event> customEvents){
+        ArrayList<Event> customWithTravelEvents = new ArrayList<>();
 
         SettingsData settingsData = user.getSettingsData();
         String address = settingsData.getAddress();
         String postalcode = settingsData.getPostalCode();
-        PreferredTransportation preferredTransportation = user.getPreferredTransportation();
+        PreferredTransportation preferredTransportation = settingsData.getPreferredTransportation();
 
+        ArrayList<Event> firstAndLastEventsOfTwoDays = getTwoDaysFirstAndLastEvents(customEvents);
 
+        if (preferredTransportation == PreferredTransportation.BIKE){
+            Event DayOnebikeEventBefore = travelComponent.getBikeInfo(address + ", " + postalcode, "Bassänggatan 2, 21119, Malmö", firstAndLastEventsOfTwoDays.get(0).getStartTime(), null);
+            Event DayOnebikeEventAfter = travelComponent.getBikeInfo(address + ", " + postalcode, "Bassänggatan 2, 21119, Malmö", null , firstAndLastEventsOfTwoDays.get(1).getEndTime());
+            Event DayTwobikeEventBefore = travelComponent.getBikeInfo(address + ", " + postalcode, "Bassänggatan 2, 21119, Malmö", firstAndLastEventsOfTwoDays.get(2).getStartTime(), null);
+            Event DayTwobikeEventAfter = travelComponent.getBikeInfo(address + ", " + postalcode, "Bassänggatan 2, 21119, Malmö", null , firstAndLastEventsOfTwoDays.get(3).getEndTime());
+
+            int counter = 0;
+            for (int i = 0; i < customEvents.size(); i++){
+                for (int j = 0; j < firstAndLastEventsOfTwoDays.size(); j++){
+                    if (i==0){
+                        customEvents.add(0,DayOnebikeEventBefore);
+                        counter++;
+                    }
+                    else if (isEventsEqual(customEvents.get(i), firstAndLastEventsOfTwoDays.get(j)) && counter == 1){
+                        customEvents.add(i, DayOnebikeEventAfter);
+                        counter++;
+                    }
+                    else if (isEventsEqual(customEvents.get(i), firstAndLastEventsOfTwoDays.get(j)) && counter == 2){
+                        customEvents.add(i, DayTwobikeEventBefore);
+                        counter++;
+                    } else if (isEventsEqual(customEvents.get(i), firstAndLastEventsOfTwoDays.get(j)) &&counter == 3) {
+                        customEvents.add(i, DayTwobikeEventAfter);
+                        counter++;
+                        break;
+                    }
+                }
+            }
+        } else {
+            Event DayOneBusEventBefore = travelComponent.getBusInfo(address + ", " + postalcode, "Bassänggatan 2, 21119, Malmö", firstAndLastEventsOfTwoDays.get(0).getStartTime(), null);
+            Event DayOneBusEventAfter = travelComponent.getBusInfo(address + ", " + postalcode, "Bassänggatan 2, 21119, Malmö", null, firstAndLastEventsOfTwoDays.get(1).getEndTime());
+            Event DayTwoBusEventBefore = travelComponent.getBusInfo(address + ", " + postalcode, "Bassänggatan 2, 21119, Malmö", firstAndLastEventsOfTwoDays.get(2).getStartTime(), null);
+            Event DayTwoBusEventAfter = travelComponent.getBusInfo(address + ", " + postalcode, "Bassänggatan 2, 21119, Malmö", null, firstAndLastEventsOfTwoDays.get(3).getEndTime());
+
+            int counter = 0;
+            for (int i = 0; i < customEvents.size(); i++){
+                for (int j = 0; j < firstAndLastEventsOfTwoDays.size(); j++){
+                    if (i==0){
+                        customEvents.add(0,DayOneBusEventBefore);
+                        counter++;
+                    }
+                    else if (isEventsEqual(customEvents.get(i), firstAndLastEventsOfTwoDays.get(j)) && counter == 1){
+                        customEvents.add(i, DayOneBusEventAfter);
+                        counter++;
+                    }
+                    else if (isEventsEqual(customEvents.get(i), firstAndLastEventsOfTwoDays.get(j)) && counter == 2){
+                        customEvents.add(i, DayTwoBusEventBefore);
+                        counter++;
+                    } else if (isEventsEqual(customEvents.get(i), firstAndLastEventsOfTwoDays.get(j)) &&counter == 3) {
+                        customEvents.add(i, DayTwoBusEventAfter);
+                        counter++;
+                        break;
+                    }
+                }
+            }
+        }
+        System.out.println(customEvents);
+        return customWithTravelEvents;
     }
+
+ */
 
     public ArrayList<Event> getTwoDaysFirstAndLastEvents(ArrayList<Event> customEvents){
         ArrayList<Event> fourEventsOfImportance = new ArrayList<>();
 
-        Calendar calendar = Calendar.getInstance();
-        calendar.setTime(new Date());
-        calendar.add(Calendar.DATE, 2);
+        //customEvents.sort(Comparator.comparing(Event ::getStartTime));
 
-        Date dateTwoDaysAfter = calendar.getTime();
+        Map<String, ArrayList<Event>> eventsbyDate = new LinkedHashMap<>();
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
-        calendar.add(Calendar.DATE,1);
-
-        Date dateOneDayAfter = calendar.getTime();
-
-        //loopa igenom två dagar få ut första event av dagen och sista event av dagen
         for (Event event : customEvents){
-            if(!dateTwoDaysAfter.after(event.getStartTime())){
-
-                if (!dateOneDayAfter.after(event.getStartTime()){
-                    fourEventsOfImportance.add(event);
-                }
-            }
+            String eventDate = dateFormat.format(event.getStartTime());
+            eventsbyDate.computeIfAbsent(eventDate, k -> new ArrayList<>()).add(event);
         }
 
+        int dayCount = 0;
+
+        for (ArrayList<Event> dailyEvents : eventsbyDate.values()){
+            if (dayCount < 2){
+                fourEventsOfImportance.add(dailyEvents.get(0));
+                fourEventsOfImportance.add(dailyEvents.get(dailyEvents.size()-1));
+                dayCount++;
+            }else {
+                break;
+            }
+        }
+        return fourEventsOfImportance;
     }
 }

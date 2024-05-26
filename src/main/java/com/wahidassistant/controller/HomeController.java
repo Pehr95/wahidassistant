@@ -23,14 +23,14 @@ public class HomeController {
                 return "index.html";
             }
         }
-        return "templogin.html";
+        return "login.html";
     }
 
     @GetMapping("/settings")
     public String settings(HttpServletRequest request) {
         String username = userService.getUsername(request);
         if (username == null) {
-            return "templogin.html";
+            return "login.html";
         } else {
             return "settings.html";
         }
@@ -40,7 +40,7 @@ public class HomeController {
     public String hideEvents(HttpServletRequest request) {
         String username = userService.getUsername(request);
         if (username == null) {
-            return "templogin.html";
+            return "login.html";
         } else {
             return "hide-events.html";
         }
