@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+//  A class for the authentication request. Author Pehr Nortén.
 public class AuthenticationRequest {
     private String username;
     private String password;

@@ -7,9 +7,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @Configuration
 public class CorsConfig implements WebMvcConfigurer {
 
+    // Configure CORS settings. Author Pehr Nortén.
     @Override
     public void addCorsMappings(CorsRegistry registry) {
-        System.out.println("CORS configuration applied.");
         registry.addMapping("/api/**") // Apply CORS configuration to specific paths
                 .allowedOrigins("*") // Allow requests from any origin
                 .allowedMethods("GET", "POST", "PUT", "DELETE") // Allow specified methods

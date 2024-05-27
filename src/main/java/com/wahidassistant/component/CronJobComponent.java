@@ -14,20 +14,14 @@ import java.util.List;
 @EnableScheduling
 @Component
 @AllArgsConstructor
+// A component for scheduling cron jobs. Author Pehr Nortén and Med Wahid Hassani.
 public class CronJobComponent {
     private final ScheduleRepository scheduleRepository;
     private final ScheduleService scheduleService;
 
-    // Test scraping and saving schedule (Delete later)
-    public void scrapeTester() {
-        System.out.println("Scraping and saving schedule");
-        scheduleService.addOrUpdateSchedule("https://schema.mau.se/setup/jsp/Schema.jsp?startDatum=idag&intervallTyp=m&intervallAntal=6&sprak=SV&sokMedAND=true&forklaringar=true&resurser=p.TGSYA23h");// Invalid link --> "https://schema.mau.se/setup/jsp/Schema.jsp?startDatum=idag&intervallTyp=m&intervallAntal=1&sprak=SV&sokMedAND=true&forklaringar=true&resurser=p.KGGRD23"
-        // Invalid link --> "https://schema.mau.se/setup/jsp/Schema.jsp?startDatum=idag&intervallTyp=m&intervallAntal=1&sprak=SV&sokMedAND=true&forklaringar=true&resurser=p.KGGRD23"
-    }
-
-    // scrape and save every 4 hours
+    // scrape and save every 4 hours. Author Pehr Nortén and Med Wahid Hassani
     @Scheduled(cron = "0 0 */4 * * *")
-    public void scrapeAndUpdateExistingSchedules() { // Med Wahid
+    public void scrapeAndUpdateExistingSchedules() {
         List<Schedule> scheduleList = scheduleRepository.findAll();
 
         // Loop through all schedules and check if they have changed
@@ -54,7 +48,7 @@ public class CronJobComponent {
         }
     }
 
-    // Clean up unused schedules every night at 01:00
+    // Clean up unused schedules every night at 01:00. Author Pehr Nortén.
     @Scheduled(cron = "0 0 1 * * *")
     public void cleanUpUnusedSchedules() {
         scheduleService.cleanUpUnusedSchedules();

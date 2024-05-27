@@ -17,6 +17,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+// A component for scraping web pages. Author Pehr Nortén and Wahid Hassani.
 @Component
 public class WebScraper {
     private final Map<String, Integer> monthConversion = makeMonthConversionHashMap();
@@ -24,10 +25,10 @@ public class WebScraper {
 
     public Schedule scrapeSchedule(String url) { // Med Wahid
         int weeksAhead = 2; // How many weeks ahead to scrape
-        // Todo: felhantering. Kolla om dokumentet har rätt typ av format samt att datum formattering är korrekt.
 
-        Document document = checkIfUrlIsValid(url);
+        Document document = checkIfUrlIsValid(url); // Check if the URL is valid and get the document
 
+        // If the document is null, return null
         if (document == null){
             return null;
         }
@@ -60,6 +61,7 @@ public class WebScraper {
         String lastUpdatedColumnQuery = "td.data.commonCell:nth-of-type(" + columnNumbers.get("Uppdat.") + ")";
 
 
+        // Loop through all rows in the table for the schedule
         for (Element row : document.select("table.schematabell tr")){
             HashMap<String, String> rooms = new HashMap<>();
             ArrayList<String> teachers = new ArrayList<>();
@@ -71,8 +73,8 @@ public class WebScraper {
                 year = parts[1];
             }
 
+            // Date
             if (!row.select(dateColumnQuery1).text().isEmpty()){
-                // Date
                 if (!row.select(dateColumnQuery2).text().isEmpty()) {
                     date = row.select(dateColumnQuery2).text();
                 }
@@ -112,17 +114,17 @@ public class WebScraper {
                 // Convert the year, date and time to timestamps
                 Timestamp[] timestamps = getTimeStamps(year, date, time);
 
-                // Add the event to the list
-
                 // if timestamps[1] is not more than two weeks in the future add the event
                 if(timestamps[1].getTime() < timestampThreshold.getTime()){
                     events.add(new Event(courseName, timestamps[0], timestamps[1], calculateDuration(timestamps), rooms, teachers, description, convertLastUpdatedToDate(lastUpdated), false));
                 }
             }
         }
+        // Return the schedule
         return new Schedule(url, events, new java.util.Date());
     }
 
+    // Method to remove letters at the end of the maze map URL to fix broken links from Kronox
     public String trimLettersAtEndOfMazeMapUrl(String input) {
         int length = input.length();
         StringBuilder stringBuilder = new StringBuilder(input);
@@ -139,6 +141,7 @@ public class WebScraper {
         return stringBuilder.toString();
     }
 
+    // Method to extract the course name from the course name column with regex
     public static String extractCourseName(String inputString) {
         String regex = "^(.*?), \\d+(?:\\.\\d+)? hp"; // This regex captures everything before " {digit} hp "
         Pattern pattern = Pattern.compile(regex);
@@ -151,7 +154,8 @@ public class WebScraper {
         }
     }
 
-    private Document fetchDocument(String url) { //Med Wahid
+    // Method to fetch a document from a URL
+    private Document fetchDocument(String url) {
         try {
             return Jsoup.connect(url).get();
         } catch (Exception e) {
@@ -160,6 +164,8 @@ public class WebScraper {
         return null;
     }
 
+
+    // Method to scrape rooms from a document
     public HashMap<String, String> scrapeRooms(Document document) {
         HashMap<String, String> roomsHashMap = new HashMap<>();
         String id;
@@ -175,6 +181,7 @@ public class WebScraper {
         return roomsHashMap;
     }
 
+    // Method to scrape teacher names from a document
     public HashMap<String, String> scrapeTeacherNames(Document document) {
         HashMap<String, String> teacherNamesHashMap = new HashMap<>();
         String sign;
@@ -190,6 +197,7 @@ public class WebScraper {
         return teacherNamesHashMap;
     }
 
+    // Method to create a HashMap for month conversion
     public Map<String, Integer> makeMonthConversionHashMap(){
         Map<String, Integer> map = new HashMap<>();
         map.put("jan", 1);
@@ -207,6 +215,7 @@ public class WebScraper {
         return map;
     }
 
+    // Method to convert year, date and time to timestamps
     public Timestamp[] getTimeStamps(String year, String dayAndMonth, String startAndEndTime){
         String[] parts = dayAndMonth.split(" ");
         int day = Integer.parseInt(parts[0]);
@@ -229,15 +238,18 @@ public class WebScraper {
         return new Timestamp[] {Timestamp.valueOf(startDateTime),Timestamp.valueOf(endDateTime)};
     }
 
+    // Method to calculate the duration of an event
     public int calculateDuration(Timestamp[] timestamps) {
         return (int) ((timestamps[1].getTime() - timestamps[0].getTime()) / (1000 * 60));
     }
 
+    // Method to convert a string to a date
     public Date convertLastUpdatedToDate(String lastUpdated) {
         LocalDate localDate = LocalDate.parse(lastUpdated, DateTimeFormatter.ISO_LOCAL_DATE);
         return Date.valueOf(localDate);
     }
 
+    // Method to get the next Monday after 'weeksAhead' weeks
     public Timestamp getMondayTimestampXWeeksAhead(int weeksAhead) {
         // Get current date
         LocalDate currentDate = LocalDate.now();
@@ -249,12 +261,14 @@ public class WebScraper {
         return Timestamp.valueOf(nextMonday.atStartOfDay());
     }
 
+    // Method to check if a URL is valid
     public Document checkIfUrlIsValid(String url) {
-
+        // Check if the URL is a valid URL
         if (!url.contains("https://")) {
             return null;
         }
 
+        // Check if the URL is a valid schedule URL
         if (url.contains("d&intervallAntal=")){
             return null;
         }
@@ -262,6 +276,7 @@ public class WebScraper {
         Document document = fetchDocument(url);
         System.out.println("Fetching document from: " + url);
         columnNumbers = new HashMap<>();
+        // Required columns for the schedule
         String[] requiredColumns = {"Datum", "Start-Slut", "Kurs.grp", "Sign", "Lokal", "Moment", "Uppdat."};
 
 
