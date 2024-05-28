@@ -8,14 +8,19 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 
+/**
+ * Represents a bus event with bus number, name, deprature and arrival times.
+ * duration, origin, destination, preferred arrival time.
+ * Author: Wahid
+ */
 @AllArgsConstructor
 @Data
 public class BusEvent /*extends Event*/ {
-    private String busNumber;
-    private String busName;
-    private Date departureTime;
-    private Date arrivalTime;
-    private String durationInMinutes;
+    private String busNumber; // The number of the bus
+    private String busName; // The name of the bus
+    private Date departureTime; // Departure time of the bus event
+    private Date arrivalTime; // Arrival time of the bus event
+    private String durationInMinutes; // duration of the bus event in minutes
     private String origin; //location of departure
     private String destination; //location of arrival
     private int preferredArrivalTime;

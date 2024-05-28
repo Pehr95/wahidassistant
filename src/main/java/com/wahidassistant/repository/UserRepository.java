@@ -9,13 +9,20 @@ import org.springframework.data.mongodb.repository.Query;
 import java.util.List;
 import java.util.Optional;
 
+/**
+ * Repository interface for managing User in MongoDB
+ * Author: Wahid & Pehr
+ */
 public interface UserRepository extends MongoRepository<User, String> {
 
+    // Finds a user by their username
     Optional<User> findByUsername(String username);
 
+    // Finds the schedule ID reference by the username
     @Query(value = "{ 'username' : ?0 }", fields = "{ 'scheduleidref' : 1 }")
     String findScheduleIdRefById(String username);
 
+    // Finds custom events for a user by their username
     @Query (value = "{ 'username' : ?0 }", fields = "{ 'customevents' : 1 }")
     List<Event> findCustomEvents(String username);
     //Todo: fixa att det finns i databasen
