@@ -59,14 +59,6 @@ document.addEventListener("DOMContentLoaded", function() {
             }
         })
         .then(data => {
-            const jwt = data.token;
-            //alert('JWT: ' + jwt);
-            //document.cookie = `auth_token=${jwt}; path=/`;
-            //console.log("cookies: " + document.cookie);
-            //alert('JWT: ' + jwt); // Useful to have
-            // Set JWT as a cookie
-            document.cookie = `auth_token=${jwt}; path=/`;
-            console.log("cookies: " + document.cookie);
             // Redirect to the home page
             window.location.href = '/';
         })

@@ -1,5 +1,5 @@
 
-// Fetches events when the window loads, Author Amer, Pehr, Adam, Wahid
+// Fetches events when the window loads, Author Amer, Pehr, Wahid
 window.onload = fetchEvents();
 let popUpIsActive = false;
 let savedEvents;
