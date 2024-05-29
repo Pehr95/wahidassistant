@@ -90,7 +90,7 @@ document.addEventListener("DOMContentLoaded", function() {
         })
         .then(data => {
             console.log("Data saved successfully:", data);
-            alert("Data saved successfully: " + JSON.stringify(data))
+            alert("Data saved successfully!")
         })
         .catch(error => {
             console.error("Error saving data:", error);

@@ -8,27 +8,22 @@ let popUpIsActive = false;
 // Function to fetch the user's schedule from the server
 async function fetchEvents() {
     try {
-        console.log("hej: " + document.cookie);
         const response = await fetch('/api/v1/user/schedule', {method: 'GET', headers: {'Authorization': 'Bearer ' + getAuthToken()}});
         const schedules = await response.json();
-        console.log("ok");
         const schedule = schedules[0];
         const events = schedule.events;
         displayEvents(events);
-        console.log(events);
     } catch (error) {
         console.error('Error fetching events:', error);
-        //window.location.href = 'templogin.html';
     }
 }
 // Function to get the JWT token from the cookies
 function getAuthToken() {
     const cookies = document.cookie.split(';').map(cookie => cookie.trim());
-    console.log(cookies);
     for (const cookie of cookies) {
         const [name, value] = cookie.split('=');
         if (name === 'auth_token') {
-            console.log('Found auth token:', value)
+            console.log('Found auth token');
             return value;
         }
     }
@@ -274,7 +269,7 @@ function displayEvents(events) {
     function convertToSwedishTime(utcTimeString) {
         const utcDate = new Date(utcTimeString);
         const swedishTime = utcDate.toLocaleString('sv-SE', { timeZone: 'Europe/Stockholm', hour12: false });
-        return swedishTime;
+        return utcTimeString;
     }
 
 }

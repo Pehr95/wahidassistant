@@ -10,14 +10,11 @@ let schedule;
 
 async function fetchEvents() {
     try {
-        console.log("hej: " + document.cookie);
         const response = await fetch('/api/v1/user/hide-events', {method: 'GET', headers: {'Authorization': 'Bearer ' + getAuthToken()}});
         schedule = await response.json();
-        console.log("ok");
         events = schedule.events;
         savedEvents = JSON.stringify(events)
         displayEvents(events);
-        console.log(events);
     } catch (error) {
         console.error('Error fetching events:', error);
         //window.location.href = 'templogin.html';
@@ -30,7 +27,7 @@ function getAuthToken() {
     for (const cookie of cookies) {
         const [name, value] = cookie.split('=');
         if (name === 'auth_token') {
-            console.log('Found auth token:', value)
+            console.log('Found auth token.')
             return value;
         }
     }
@@ -288,12 +285,12 @@ function displayEvents(events) {
         popUpDiv.appendChild(descriptionParagraph);
 
     }
-// Converts UTC time to Swedish time
 
+    // Converts UTC time to Swedish time
     function convertToSwedishTime(utcTimeString) {
         const utcDate = new Date(utcTimeString);
         const swedishTime = utcDate.toLocaleString('sv-SE', { timeZone: 'Europe/Stockholm', hour12: false });
-        return swedishTime;
+        return utcTimeString;
     }
 
 
@@ -328,8 +325,7 @@ function saveHiddenEvents() {
             return response.json();
         })
         .then(data => {
-            console.log("Data saved successfully:", data);
-            //alert("Data saved successfully: " + JSON.stringify(data))
+            console.log("Data saved successfully");
             window.location.href = '/';
         })
         .catch(error => {

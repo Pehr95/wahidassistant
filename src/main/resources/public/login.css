@@ -2,7 +2,7 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: url('icon-bakgrund.png') no-repeat center center fixed;
+    background: #3174cd;/*url('icon-bakgrund.png') no-repeat center center fixed;*/
     background-size: cover;
     display: flex;
     justify-content: center;
@@ -10,15 +10,18 @@ body {
     height: 100vh;
     overflow: hidden; 
 }
-
+/*
 @keyframes backgroundScroll {
     from {background-position: 200 100;}
     to {background-position: 100% 0%;}
 }
 
+
 body {
     animation: backgroundScroll 20s linear infinite;
 }
+
+ */
 
 .formContainer {
     background-color: #fff;

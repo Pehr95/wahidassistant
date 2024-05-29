@@ -46,8 +46,8 @@ document.addEventListener("DOMContentLoaded", function() {
         .then(data => {
             const jwt = data.token;
             //alert('JWT: ' + jwt);
-            document.cookie = `auth_token=${jwt}; path=/`; 
-            console.log("cookies: " + document.cookie);
+            //document.cookie = `auth_token=${jwt}; path=/`;
+            //console.log("cookies: " + document.cookie);
             window.location.href = '/';
         })
         .catch(error => {
