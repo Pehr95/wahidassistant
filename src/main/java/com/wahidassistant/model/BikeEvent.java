@@ -5,14 +5,15 @@ import lombok.Data;
 
 import java.util.Date;
 
+/**
+ * This class represents a bike event with departure and arrival times.
+ * Author: Wahid
+ */
 @AllArgsConstructor
 @Data
-public class BikeEvent {
+public class BikeEvent /*extends Event*/ {
     //todo: fixa den
-    private Date departureTime;
-    private Date arrivalTime;
-    private String durationInMinutes;
-    private String origin; //location of departure
-    private String destination; //location of arrival
-    private int preferredArrivalTime;
+    private Date departureTime; // Departure time for bike event
+    private Date arrivalTime; // Arrival time for bike event
+    private String durationInMinutes; // Duration of the bike event in minutes
 }

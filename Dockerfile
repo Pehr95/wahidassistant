@@ -1,12 +1,15 @@
-FROM eclipse-temurin:17
+FROM openjdk:20-jdk-slim
+# eclipse-temurin:20
 
-ARG JAR_FILE=target/*.jar
+# Create app directory
+WORKDIR /app
 
-# Copy the JAR file into the container
-COPY ./target/demo-0.0.1-SNAPSHOT.jar app.jar
+# Copy the JAR file
+COPY ../../Desktop/Pehrs-mVM2/test%20med%20marcus/demo-0.0.1-SNAPSHOT.jar /app/demo-0.0.1-SNAPSHOT.jar
 
-# Expose port 8080
-EXPOSE 3000
+# Expose the port your Spring Boot application runs on
+EXPOSE 8080
 
-# Command to run the Java application
-CMD ["java", "-jar", "app.jar"]
+# Run the JAR file
+CMD ["java", "-jar", "/app/demo-0.0.1-SNAPSHOT.jar"]
+

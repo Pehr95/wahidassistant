@@ -8,7 +8,11 @@ import org.springframework.data.mongodb.core.mapping.Document;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
-
+/**
+ * This class represents an event with course name, start and end time, duration of the lesson
+ * rooms, teachers, description, date and isHidden for hiding events.
+ * Author: Pehr
+ */
 @Data
 @AllArgsConstructor
 public class Event {

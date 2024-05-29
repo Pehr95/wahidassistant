@@ -16,20 +16,21 @@ import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @RequiredArgsConstructor
+// A service for authentication. Author Pehr Nortén.
 public class AuthenticationService {
     private final UserRepository repository;
     private final PasswordEncoder passwordEncoder;
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
 
+    // Register a new user. Author Pehr Nortén.
     public AuthenticationResponse register(RegisterRequest request, HttpServletResponse response) {
         // Check if the username already exists
         if (repository.findByUsername((request.getUsername())).isPresent()){
-            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists");
+            throw new ResponseStatusException(HttpStatus.CONFLICT, "Username already exists"); // Return a 409 Conflict status code if the username already exists
         }
 
-        // todo: Implement the registration logic
-
+        // Create a new user
         var user = User.builder()
                 .username(request.getUsername())
                 .password(passwordEncoder.encode(request.getPassword()))
@@ -46,15 +47,15 @@ public class AuthenticationService {
         cookie.setHttpOnly(false);
         response.addCookie(cookie);
 
-
+        // Return the JWT token
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 
+    // Authenticate a user. Author Pehr Nortén.
     public AuthenticationResponse authenticate(AuthenticationRequest request, HttpServletResponse response) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        var user = repository.findByUsername(request.getUsername()).orElseThrow(() -> new RuntimeException("User not found"));
+        var user = repository.findByUsername(request.getUsername()).orElseThrow(() -> new RuntimeException("User not found")); // Return a 404 Not Found status code if the user is not found
         var jwtToken = jwtService.generateToken(user);
-        System.out.println("test");
 
         // Set JWT token as cookie
         Cookie cookie = new Cookie("auth_token", jwtToken);
@@ -65,6 +66,7 @@ public class AuthenticationService {
         cookie.setHttpOnly(false);
         response.addCookie(cookie);
 
+        // Return the JWT token
         return AuthenticationResponse.builder().token(jwtToken).build();
     }
 }

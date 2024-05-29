@@ -2,22 +2,13 @@ body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background: url('bakgrund.png') no-repeat center center fixed;
+    background: #3174cd;
     background-size: cover;
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
     overflow: hidden; 
-}
-
-@keyframes backgroundScroll {
-    from {background-position: 200 100;}
-    to {background-position: 100% 0%;}
-}
-
-body {
-    animation: backgroundScroll 20s linear infinite;
 }
 
 .formContainer {
