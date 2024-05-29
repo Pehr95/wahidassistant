@@ -24,7 +24,7 @@ public class UserController {
 
     //private final CustomEvents customEvents;
 
-    @GetMapping("/schedule") // skickar in CustomEvents
+    @GetMapping("/schedule") // sends back customEvents from user. Author Pehr Nortén and Amer Shikh-Alzor.
     public List<Schedule> fetchSchedule(HttpServletRequest request) {
         String username = userService.getUsername(request);
         //String scheduleIdRef = service.getUserScheduleIdRef(username);
@@ -50,7 +50,7 @@ public class UserController {
         return null;
     }
 
-    @PostMapping("/settings")
+    @PostMapping("/settings") // handles the settingsdata and saves it in the user. Author Pehr Nortén & Amer Shikh-Alzor.
     public ResponseEntity<SettingsData> changeSettings(HttpServletRequest request, @RequestBody SettingsData newSettingsData) {
         String username = userService.getUsername(request);
         Optional<User> optionalUser  = userService.findByUsername(username);
@@ -87,7 +87,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/settings")
+    @GetMapping("/settings") // returns settingsdata from the user by their username in the database. Author Pehr Nortén & Amer Shikh-Alzor.
     public ResponseEntity<SettingsData> getSettings(HttpServletRequest request) {
         String username = userService.getUsername(request);
         Optional<User> optionalUser  = userService.findByUsername(username);
@@ -100,7 +100,7 @@ public class UserController {
     }
 
     @PostMapping("/hide-events")
-    public ResponseEntity<List<Event>> updateCustomEvents(HttpServletRequest request, @RequestBody Schedule newFullCustomSchedule) {
+    public ResponseEntity<List<Event>> updateCustomEvents(HttpServletRequest request, @RequestBody Schedule newFullCustomSchedule) { // gets full schedule with events with boolean isHidden and then calls method to save it in the user repository. Author Pehr Nortén, Amer Shikh-Alzor and contributor Wahid Hassani.
         String username = userService.getUsername(request);
         Optional<User> optionalUser = userService.findByUsername(username);
 
@@ -119,7 +119,7 @@ public class UserController {
         return ResponseEntity.badRequest().body(null);
     }
 
-    @GetMapping("/hide-events")
+    @GetMapping("/hide-events") //returns customEvents from user repository. Author Pehr Nortén, Amer Shikh-Alzor and contributor Wahid Hassani.
     public ResponseEntity<Schedule> getCustomEvents(HttpServletRequest request) {
         String username = userService.getUsername(request);
         Optional<User> optionalUser = userService.findByUsername(username);
