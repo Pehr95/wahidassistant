@@ -6,7 +6,10 @@ import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.ArrayList;
 import java.util.Date;
-
+/**
+ * This class represents a schedule with a list of events, URL, and the lastSynced date.
+ * Author: Pehr
+ */
 @Data
 @Document
 public class Schedule {
