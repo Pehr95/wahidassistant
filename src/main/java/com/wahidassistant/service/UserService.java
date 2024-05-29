@@ -14,21 +14,27 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-
+// UserService class is responsible for handling operations related to User.
+// It is used to interact with the UserRepository and JwtService.
+// Author: Wahid, Pehr, Amer
 @AllArgsConstructor
 @Service
 public class UserService {
     private final UserRepository userRepository;
     private final JwtService jwtService;
+    // Method to find a user by their username.
 
     public Optional<User> findByUsername(String username){
         return userRepository.findByUsername(username);
     }
+    // Method to get the schedule ID reference of a user by their username.
 
     public String getUserScheduleIdRef(String username){ //behöver spara det i databasen som en attribut som heter "scheduleIdRef"
         return userRepository.findScheduleIdRefById(username);
     }
 
+    // Method to get the username from the request. It first checks the "Authorization" header,
+    // if it's null, it checks the cookies for "auth_token" and extracts the username from it.
     public String getUsername(HttpServletRequest request) {
         final String authHeader = request.getHeader("Authorization");
 

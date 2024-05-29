@@ -1,10 +1,12 @@
 
+// Fetches events when the window loads, Author Amer, Pehr, Adam, Wahid
 window.onload = fetchEvents();
 let popUpIsActive = false;
 let savedEvents;
 
 let events = [];
 let schedule;
+// Fetches events from the server
 
 async function fetchEvents() {
     try {
@@ -21,6 +23,7 @@ async function fetchEvents() {
         //window.location.href = 'templogin.html';
     }
 }
+// Retrieves the auth token from the cookies
 
 function getAuthToken() {
     const cookies = document.cookie.split(';').map(cookie => cookie.trim());
@@ -34,10 +37,12 @@ function getAuthToken() {
     console.log('No auth token found.')
     return null; // Return null if token is not found
 }
+// Redirects to the settings page
 
 function redirectToSettings() {
     window.location.href = '/settings';
 }
+// Logs out the user by deleting the JWT cookie and redirecting to the login page
 
 function logout() {
     // Delete the JWT cookie
@@ -52,6 +57,7 @@ function logout() {
     window.location.href = '/'; // Adjust the URL as needed
 }
 
+// Deletes all cookies
 
 function deleteAllCookies() {
     var cookies = document.cookie.split(";");
@@ -64,6 +70,7 @@ function deleteAllCookies() {
     }
 }
 
+// Marks or unmarks an event
 
 function markOrUnmarkEvent(event) {
 
@@ -76,7 +83,9 @@ function markOrUnmarkEvent(event) {
 }
 
 
-
+// Displays events on the page with the specified format and styling. The events are grouped by day and displayed in chronological order.
+// Each event is displayed in a div element with a header containing the course name and time, and a paragraph element containing the teachers, rooms, and description.
+// The rooms are displayed as hyperlinks that open in a new tab.
 function displayEvents(events) {
     const scheduleContainer = document.getElementById('scheduleContainer');
 
@@ -91,12 +100,14 @@ function displayEvents(events) {
             makeLessonDiv(event);
         } else {
             makeDayHeader(currentStartTime);
+            // Create a div for the event
             makeLessonDiv(event);
         }
 
         previousStartTime = currentStartTime;
 
     });
+    // Function to create a day header
 
     function makeDayHeader(date) {
         let day = getDayOfWeek(date);
@@ -135,7 +146,7 @@ function displayEvents(events) {
         var dayName = days[dayOfWeek];
         return dayName;
     }
-
+// Function to create a div for an event;
     function makeLessonDiv(event) {
         const eventDiv = document.createElement('div');
         eventDiv.classList.add('eventContainer');
@@ -204,6 +215,7 @@ function displayEvents(events) {
 
     let popUpDiv; // Declare popUpDiv outside the function so it's accessible globally
 
+// Shows a popup with event details
     function showPopUp(event) {
         if (!popUpIsActive) {
             content = document.getElementById('scheduleContainer');
@@ -230,6 +242,7 @@ function displayEvents(events) {
         }
     }
 
+    // Function to create a popup div with event details
     function makePopUpDiv(event) {
         popUpDiv = document.createElement('div');
         popUpDiv.classList.add('popUp');
@@ -275,6 +288,7 @@ function displayEvents(events) {
         popUpDiv.appendChild(descriptionParagraph);
 
     }
+// Converts UTC time to Swedish time
 
     function convertToSwedishTime(utcTimeString) {
         const utcDate = new Date(utcTimeString);
@@ -283,7 +297,7 @@ function displayEvents(events) {
     }
 
 
-
+    // Function to mark or unmark an event
     function markOrUnmarkEvent(event, iconDiv) {
         if (!popUpIsActive) {
             event.hidden = !event.hidden; //toggle
@@ -294,6 +308,7 @@ function displayEvents(events) {
     }
 }
 
+// Saves hidden events to the server
 
 function saveHiddenEvents() {
     schedule.events = events;
@@ -323,6 +338,8 @@ function saveHiddenEvents() {
 }
 
 let settingsDiv;
+// Opens the settings popup
+
 function openSettingPopUp() {
 
     if (!popUpIsActive) {
@@ -337,6 +354,9 @@ function openSettingPopUp() {
         }, 100);
     }
 }
+
+// Closes the settings popup when clicked outside the popup
+
 function closeSettingsPopUp(clickEvent) {
     const isClickedInsidePopup = settingsDiv.contains(clickEvent.target);
     if (!isClickedInsidePopup) {
@@ -350,11 +370,12 @@ function closeSettingsPopUp(clickEvent) {
     const screenWidth = window.innerWidth;
     console.log("Screen width:", screenWidth);
 }
+// Redirects to the specified path
 
 function redirect(path) {
     window.location.href = path;
 }
-
+// Shows the save button if the current events differ from the saved events
 function showSaveButton() {
     saveButton = document.getElementById('saveButton');
     if (savedEvents === JSON.stringify(events)) {

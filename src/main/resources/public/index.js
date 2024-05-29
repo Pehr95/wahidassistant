@@ -1,8 +1,11 @@
+// This file contains the JavaScript code for the index.html file.
+// It fetches the user's schedule from the server and displays it in the browser.
+//Author Amer, Pehr, Adam, Wahid
 
 window.onload = fetchEvents();
 let popUpIsActive = false;
 
-
+// Function to fetch the user's schedule from the server
 async function fetchEvents() {
     try {
         console.log("hej: " + document.cookie);
@@ -18,7 +21,7 @@ async function fetchEvents() {
         //window.location.href = 'templogin.html';
     }
 }
-
+// Function to get the JWT token from the cookies
 function getAuthToken() {
     const cookies = document.cookie.split(';').map(cookie => cookie.trim());
     console.log(cookies);
@@ -32,7 +35,7 @@ function getAuthToken() {
     console.log('No auth token found.')
     return null; // Return null if token is not found
 }
-
+// Function to log out the user
 function logout() {
     // Delete the JWT cookie
     deleteAllCookies('auth_token');
@@ -46,7 +49,7 @@ function logout() {
     window.location.href = '/'; // Adjust the URL as needed
 }
 
-
+// Function to delete all cookies
 function deleteAllCookies() {
     var cookies = document.cookie.split(";");
 
@@ -60,6 +63,9 @@ function deleteAllCookies() {
 
 
 
+// Displays events on the page with the specified format and styling. The events are grouped by day and displayed in chronological order.
+// Each event is displayed in a div element with a header containing the course name and time, and a paragraph element containing the teachers, rooms, and description.
+// The rooms are displayed as hyperlinks that open in a new tab.
 function displayEvents(events) {
     const scheduleContainer = document.getElementById('scheduleContainer');
 
@@ -74,12 +80,16 @@ function displayEvents(events) {
             makeLessonDiv(event);
         } else {
             makeDayHeader(currentStartTime);
+            // Create a div for the event
+
             makeLessonDiv(event);
         }
 
         previousStartTime = currentStartTime;
 
     });
+    // Function to create a day header
+
 
     function makeDayHeader(date) {
         let day = getDayOfWeek(date);
@@ -118,6 +128,7 @@ function displayEvents(events) {
         var dayName = days[dayOfWeek];
         return dayName;
     }
+// Function to create a div for an event;
 
     function makeLessonDiv(event) {
         const eventDiv = document.createElement('div');
@@ -180,6 +191,7 @@ function displayEvents(events) {
 
     let popUpDiv; // Declare popUpDiv outside the function so it's accessible globally
 
+// Shows a popup with event details
 
     function showPopUp(event) {
         if (!popUpIsActive) {
@@ -208,6 +220,7 @@ function displayEvents(events) {
     }
 
 
+    // Function to create a popup div with event details
 
     function makePopUpDiv(event) {
 
@@ -256,6 +269,7 @@ function displayEvents(events) {
         popUpDiv.appendChild(descriptionParagraph);
 
     }
+// Converts UTC time to Swedish time
 
     function convertToSwedishTime(utcTimeString) {
         const utcDate = new Date(utcTimeString);
@@ -264,7 +278,7 @@ function displayEvents(events) {
     }
 
 }
-
+// Function to open the settings popup
 let settingsDiv;
 function openSettingPopUp() {
 
@@ -280,6 +294,8 @@ function openSettingPopUp() {
         }, 100);
     }
 }
+
+// Function to close the settings popup when clicked outside the popup
 function closeSettingsPopUp(clickEvent) {
     const isClickedInsidePopup = settingsDiv.contains(clickEvent.target);
     if (!isClickedInsidePopup) {
@@ -291,7 +307,7 @@ function closeSettingsPopUp(clickEvent) {
         popUpIsActive = false;
     }
 }
-
+// Function to redirect to a new page
 function redirect(path) {
     window.location.href = path;
 }

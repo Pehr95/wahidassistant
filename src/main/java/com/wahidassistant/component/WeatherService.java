@@ -21,12 +21,17 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 // It's not implemented
+
+
+// This class is responsible for fetching and processing weather data from an SMHI API.
+
 public class WeatherService {
     String metObsAPI = "https://opendata-download-metfcst.smhi.se/api/category/pmp3g/version/2/geotype/point/lon/13.095703/lat/55.519302/data.json";
 
 
 
 
+    // This method is the entry point for fetching the weather data.
 
     public void startHere() throws MalformedURLException, IOException {
         URL url = new URL(metObsAPI);
@@ -43,13 +48,14 @@ public class WeatherService {
         }
     }
 
+    // This method reads a JSON object from a given URL.
 
     public  JSONObject readJsonFromUrl(String url) throws IOException, JSONException {
         String text = readStringFromUrl(url);
         return new JSONObject(text);
     }
 
-
+    // This method reads a string from a given URL.
     public  String readStringFromUrl(String url) throws IOException {
 
         InputStream inputStream = new URL(url).openStream();
@@ -66,6 +72,7 @@ public class WeatherService {
         }
     }
 
+    // This method fetches and processes the weather data for different periods.
 
     private String getPeriodNames(String parameterKey, String stationKey) throws IOException, JSONException {
 
@@ -131,7 +138,7 @@ public class WeatherService {
         return paramName;
     }
 
-
+    // This method converts a weather code to a human-readable weather description.
     public  String valuesToWeather(int value){
         String weather = "";
         switch (value){
