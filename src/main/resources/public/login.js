@@ -7,17 +7,10 @@ document.addEventListener("DOMContentLoaded", function() {
     const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
     const confirmPassword = document.getElementById('confirmPassword');
 
-    /**
-     * Toggles the visibility of the password input.
-     * @param {*} toggleIcon
-     * @param {*} inputField
-     */
     function toggleVisibility(toggleIcon, inputField) {
         toggleIcon.addEventListener('click', function() {
-            // Toggle the type attribute
             const type = inputField.getAttribute('type') === 'password' ? 'text' : 'password';
             inputField.setAttribute('type', type);
-            // Changes the icon based on the toggle type
             this.src = type === 'password' ? 'icon-eye.png' : 'icon-hide.png';
         });
     }
@@ -39,6 +32,55 @@ document.addEventListener("DOMContentLoaded", function() {
     const registerErrorContainer = document.getElementById("registerError");
 
     /**
+     * Checks if the token is expired and clears it if necessary.
+     */
+    function checkTokenExpiration() {
+        const token = localStorage.getItem('auth_token'); // Assuming you're storing the JWT here
+        console.log("token:" + token);
+        if (token) {
+            const payload = JSON.parse(atob(token.split('.')[1])); // Decode JWT to get the payload
+            const expiration = payload.exp * 1000; // Convert expiration to milliseconds
+            if (Date.now() > expiration) {
+                localStorage.removeItem('auth_token'); // Clear the expired token
+                loginError.textContent = 'Din session har gått ut. Var vänlig logga in igen.';
+                //logout();
+                loginErrorContainer.style.display = 'flex';
+            }
+        }
+    }
+
+
+    // Function to log out the user
+    function logout() {
+        // Delete the JWT cookie
+        deleteAllCookies('auth_token');
+
+        // Optionally clear other related storage if used
+        localStorage.removeItem('auth_token');
+        sessionStorage.removeItem('auth_token');
+
+
+        // Redirect to login page or homepage after logging out
+        //window.location.href = '/'; // Adjust the URL as needed
+    }
+
+    // Function to delete all cookies
+    function deleteAllCookies() {
+        var cookies = document.cookie.split(";");
+
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = cookies[i];
+            var eqPos = cookie.indexOf("=");
+            var name = eqPos > -1 ? cookie.substr(0, eqPos) : cookie;
+            document.cookie = name + "=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=" + window.location.hostname;
+        }
+    }
+
+    // Call the function to check for token expiration on page load
+    //checkTokenExpiration();
+    //logout();
+
+    /**
      * Handles the login process by sending a POST request to the authenticate endpoint.
      * @param {*} username
      * @param {*} password
@@ -51,22 +93,24 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             body: JSON.stringify({ username: username, password: password })
         })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else {
-                throw new Error('Login failed');
-            }
-        })
-        .then(data => {
-            // Redirect to the home page
-            window.location.href = '/';
-        })
-        .catch(error => {
-            // Display login error message
-            loginError.textContent = 'Felaktigt användarnamn eller lösenord';
-            loginErrorContainer.style.display = 'flex';
-        });
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error('Login failed');
+                }
+            })
+            .then(data => {
+                // Store the JWT in local storage
+                localStorage.setItem('token', data.token);
+                // Redirect to the home page
+                window.location.href = '/';
+            })
+            .catch(error => {
+                // Display login error message
+                loginError.textContent = 'Felaktigt användarnamn eller lösenord';
+                loginErrorContainer.style.display = 'flex';
+            });
     }
 
     /**
@@ -82,54 +126,48 @@ document.addEventListener("DOMContentLoaded", function() {
             },
             body: JSON.stringify({ username: username, password: password })
         })
-        .then(response => {
-            if (response.ok) {
-                return response.json();
-            } else if (response.status === 403) {
-                throw new Error('Username already exists');
-            } else {
-                throw new Error('Registration failed');
-            }
-        })
-        .then(data => {
-            const jwt = data.token;
-            //alert('JWT: ' + jwt); // Useful to have
-            // Redirect to the settings page
-            window.location.href = '/settings';
-        })
-        .catch(error => {
-            // Display registration error message
-            registerError.textContent = 'Användarnamnet används redan!';
-            registerErrorContainer.style.display = 'flex';
-        });
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else if (response.status === 403) {
+                    throw new Error('Username already exists');
+                } else {
+                    throw new Error('Registration failed');
+                }
+            })
+            .then(data => {
+                const jwt = data.token;
+                // Redirect to the settings page
+                window.location.href = '/settings';
+            })
+            .catch(error => {
+                // Display registration error message
+                registerError.textContent = 'Användarnamnet används redan!';
+                registerErrorContainer.style.display = 'flex';
+            });
     }
 
     // Event listener for register button click
     registerBtn.addEventListener("click", function() {
-        // Populate registration form with existing username and password
         const username = document.getElementById("username").value;
         const password = document.getElementById("password").value;
 
         document.getElementById("newUsername").value = username;
         document.getElementById("newPassword").value = password;
-        document.getElementById("confirmPassword").value = ''; 
+        document.getElementById("confirmPassword").value = '';
 
-        // Hide login error message
         loginError.textContent = '';
         loginErrorContainer.style.display = 'none';
 
-        // Switch from login form to registration form
         loginForm.classList.add("hidden");
         registerForm.classList.remove("hidden");
     });
 
     // Event listener for back button
     backBtn.addEventListener("click", function() {
-        // Hide registration error message
         registerError.textContent = '';
         registerErrorContainer.style.display = 'none';
 
-        // Switch from registration form to login form
         registerForm.classList.add("hidden");
         loginForm.classList.remove("hidden");
     });
@@ -146,6 +184,7 @@ document.addEventListener("DOMContentLoaded", function() {
         const username = document.getElementById("newUsername").value;
         const password = document.getElementById("newPassword").value;
         const confirmPassword = document.getElementById("confirmPassword").value;
+
         // Check if passwords match
         if (password !== confirmPassword) {
             registerError.textContent = 'Lösenorden matchar inte';
