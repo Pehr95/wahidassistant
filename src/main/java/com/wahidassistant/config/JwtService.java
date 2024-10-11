@@ -31,7 +31,7 @@ public class JwtService {
             return extractClaim(token, Claims::getSubject);
         } catch (ExpiredJwtException e) {
             System.out.println("Cannot extract username, token has expired.");
-            return null;  // Handle it as needed, maybe return null or throw a custom exception
+            return null;  // Handle it as needed, maybe return null or throw a custom exception weq
         }
     }
 
