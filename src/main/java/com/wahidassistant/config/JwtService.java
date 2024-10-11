@@ -18,10 +18,23 @@ import java.util.function.Function;
 @Service
 public class JwtService {
     private static final String SECRET_KEY = "75a68668f0266b0b8c0c6df3919c2ea2af9519a3ab2935bae50a254ba0857556";
-    private final int expirationTimeInHours = 24; // with Wahid
+    private final int expirationTimeInHours = 2140; // with Wahid
+    /*
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
     }
+
+
+     */
+    public String extractUsername(String token) {
+        try {
+            return extractClaim(token, Claims::getSubject);
+        } catch (ExpiredJwtException e) {
+            System.out.println("Cannot extract username, token has expired.");
+            return null;  // Handle it as needed, maybe return null or throw a custom exception
+        }
+    }
+
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) { // returns claim from a token. Author Pehr Nortén.
         final Claims claims = extractAllClaims(token);
@@ -32,6 +45,7 @@ public class JwtService {
         return generateToken(new HashMap<>(), userDetails);
     } // returns String token generated with the help of only Userdetails. Author Pehr Nortén.
 
+    /*
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
         return Jwts.builder()
                 .setClaims(extraClaims)
@@ -42,11 +56,50 @@ public class JwtService {
                 .compact();
     } //returns String token generatd with help of claims and userdetails. Author Pehr Nortén.
 
+
+     */
+    public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
+        Date now = new Date(); // Current time
+        long expirationTimeInMillis = 3600000L * expirationTimeInHours; // Convert hours to milliseconds
+        Date expirationDate = new Date(now.getTime() + expirationTimeInMillis); // Set the expiration date
+
+        // Log the issued and expiration time
+        System.out.println("Generating token for user: " + userDetails.getUsername());
+        System.out.println("Token issued at: " + now);
+        System.out.println("Token expiration at: " + expirationDate);
+
+        return Jwts.builder()
+                .setClaims(extraClaims)
+                .setSubject(userDetails.getUsername())
+                .setIssuedAt(now) // Set issued time
+                .setExpiration(expirationDate) // Set calculated expiration time
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+
+
+    /*
     public boolean isTokenValid(String token, UserDetails userDetails) {
         final String username = extractUsername(token);
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     } // method returning a boolean that's true if the username from the token equals that of the userDetails username. Author Pehr Nortén.
 
+
+     */
+
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        try {
+            final String username = extractUsername(token);
+            return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        } catch (ExpiredJwtException e) {
+            // Token has expired, handle it here
+            System.out.println("Token has expired: " + e.getMessage());
+            return false;  // Return false as the token is no longer valid
+        }
+    }
+
+    /*
     public boolean isTokenExpired(String token) {
         /*
         Wahids testlösning inte ännu klar måste hantera ifall token ä rexpired så den skickar till startsidan
@@ -60,13 +113,29 @@ public class JwtService {
         }
 
          */
+    /*
         return extractExpiration(token).before(new Date());
     } // returns a true boolean if the token expiration date is before the date now. Author Pehr Nortén. Contributor Wahid Hassani.
+
+
+     */
+
+    public boolean isTokenExpired(String token) {
+        try {
+            return extractExpiration(token).before(new Date());
+        } catch (ExpiredJwtException e) {
+            // Token has expired, return true
+            System.out.println("Token has expired: " + e.getMessage());
+            return true; // Token is expired
+        }
+    }
+
 
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
     } // returns expiration date from the token. Author Pehr Nortén.
 
+    /*
     private Claims extractAllClaims(String token) {
         return Jwts
                 .parserBuilder()
@@ -74,6 +143,29 @@ public class JwtService {
                 .build().parseClaimsJws(token)
                 .getBody();
     } // returns all claims from the token. Author Pehr Nortén.
+
+
+     */
+
+    private Claims extractAllClaims(String token) {
+        try {
+            return Jwts
+                    .parserBuilder()
+                    .setSigningKey(getSignInKey())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+        } catch (ExpiredJwtException e) {
+            // Token is expired, handle it as per your need
+            System.out.println("Token has expired: " + e.getMessage());
+            throw e; // Rethrow or handle based on your logic
+        } catch (Exception e) {
+            // Any other JWT parsing exception
+            System.out.println("Error parsing token: " + e.getMessage());
+            throw e; // Optionally handle or log other parsing exceptions
+        }
+    }
+
 
     private Key getSignInKey() {
         byte[] keyBytes = Decoders.BASE64.decode(SECRET_KEY);
