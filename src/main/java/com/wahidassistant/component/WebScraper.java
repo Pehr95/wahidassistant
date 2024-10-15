@@ -17,6 +17,12 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+
 // A component for scraping web pages. Author Pehr Nortén and Wahid Hassani.
 @Component
 public class WebScraper {
@@ -215,6 +221,7 @@ public class WebScraper {
         return map;
     }
 
+    /*
     // Method to convert year, date and time to timestamps
     public Timestamp[] getTimeStamps(String year, String dayAndMonth, String startAndEndTime){
         String[] parts = dayAndMonth.split(" ");
@@ -238,6 +245,47 @@ public class WebScraper {
         return new Timestamp[] {Timestamp.valueOf(startDateTime),Timestamp.valueOf(endDateTime)};
     }
 
+     */
+
+
+
+    public Timestamp[] getTimeStamps(String year, String dayAndMonth, String startAndEndTime) {
+        String[] parts = dayAndMonth.split(" ");
+        int day = Integer.parseInt(parts[0]);
+        int month = monthConversion.get(parts[1].toLowerCase());
+
+        parts = startAndEndTime.split("-");
+        String startTime = parts[0];
+        String endTime = parts[1];
+        String[] timeComponentsStartTime = startTime.split(":");
+        String[] timeComponentsEndTime = endTime.split(":");
+        int startHour = Integer.parseInt(timeComponentsStartTime[0]);
+        int startMinute = Integer.parseInt(timeComponentsStartTime[1]);
+        int endHour = Integer.parseInt(timeComponentsEndTime[0]);
+        int endMinute = Integer.parseInt(timeComponentsEndTime[1]);
+
+        // Parse the given date and time as LocalDateTime (Swedish time)
+        LocalDateTime startDateTime = LocalDateTime.of(Integer.parseInt(year), month, day, startHour, startMinute);
+        LocalDateTime endDateTime = LocalDateTime.of(Integer.parseInt(year), month, day, endHour, endMinute);
+
+        // Define the Swedish time zone (Europe/Stockholm)
+        ZoneId swedishZone = ZoneId.of("Europe/Stockholm");
+
+        // Convert the LocalDateTime to ZonedDateTime in Swedish time zone
+        ZonedDateTime startZonedDateTime = startDateTime.atZone(swedishZone);
+        ZonedDateTime endZonedDateTime = endDateTime.atZone(swedishZone);
+
+        // Convert the ZonedDateTime to UTC
+        ZonedDateTime startUtcZonedDateTime = startZonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
+        ZonedDateTime endUtcZonedDateTime = endZonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
+
+        // Convert to Timestamps
+        Timestamp startUtcTimestamp = Timestamp.valueOf(startUtcZonedDateTime.toLocalDateTime());
+        Timestamp endUtcTimestamp = Timestamp.valueOf(endUtcZonedDateTime.toLocalDateTime());
+
+        return new Timestamp[]{startUtcTimestamp, endUtcTimestamp};
+    }
+
     // Method to calculate the duration of an event
     public int calculateDuration(Timestamp[] timestamps) {
         return (int) ((timestamps[1].getTime() - timestamps[0].getTime()) / (1000 * 60));
@@ -249,6 +297,7 @@ public class WebScraper {
         return Date.valueOf(localDate);
     }
 
+    /*
     // Method to get the next Monday after 'weeksAhead' weeks
     public Timestamp getMondayTimestampXWeeksAhead(int weeksAhead) {
         // Get current date
@@ -259,6 +308,31 @@ public class WebScraper {
 
         // Convert to Timestamp
         return Timestamp.valueOf(nextMonday.atStartOfDay());
+    }
+
+     */
+
+    public Timestamp getMondayTimestampXWeeksAhead(int weeksAhead) {
+        // Get current date
+        LocalDate currentDate = LocalDate.now();
+
+        // Get the next Monday after 'weeksAhead' weeks
+        LocalDate nextMonday = currentDate.plusWeeks(weeksAhead + 1).with(DayOfWeek.MONDAY);
+
+        // Convert the LocalDate to LocalDateTime at the start of the day (Swedish time)
+        LocalDateTime nextMondayStart = nextMonday.atStartOfDay();
+
+        // Define the Swedish time zone (Europe/Stockholm)
+        ZoneId swedishZone = ZoneId.of("Europe/Stockholm");
+
+        // Convert to ZonedDateTime in the Swedish time zone
+        ZonedDateTime swedishZonedDateTime = nextMondayStart.atZone(swedishZone);
+
+        // Convert to UTC
+        ZonedDateTime utcZonedDateTime = swedishZonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
+
+        // Convert to Timestamp in UTC
+        return Timestamp.valueOf(utcZonedDateTime.toLocalDateTime());
     }
 
     // Method to check if a URL is valid

@@ -269,7 +269,7 @@ function displayEvents(events) {
     function convertToSwedishTime(utcTimeString) {
         const utcDate = new Date(utcTimeString);
         const swedishTime = utcDate.toLocaleString('sv-SE', { timeZone: 'Europe/Stockholm', hour12: false });
-        return utcTimeString;
+        return swedishTime;
     }
 
 }
