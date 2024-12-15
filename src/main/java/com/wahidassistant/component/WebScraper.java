@@ -160,6 +160,7 @@ public class WebScraper {
          */
     }
 
+    //
     public static String extractBeforeKeywords(String input) {
         // Definiera nyckelorden
         String keyword1 = " Kurs inom program";
