@@ -143,6 +143,10 @@ public class WebScraper {
 
     // Method to extract the course name from the course name column with regex
     public static String extractCourseName(String inputString) {
+
+        return extractBeforeKeywords(inputString);
+
+        /*
         String regex = "^(.*?), \\d+(?:\\.\\d+)? hp"; // This regex captures everything before " {digit} hp "
         Pattern pattern = Pattern.compile(regex);
         Matcher matcher = pattern.matcher(inputString);
@@ -152,7 +156,39 @@ public class WebScraper {
         } else {
             return "No match found.";
         }
+
+         */
     }
+
+    public static String extractBeforeKeywords(String input) {
+        // Definiera nyckelorden
+        String keyword1 = " Kurs inom program";
+        String keyword2 = " Fristående kurs";
+
+        // Hitta index för första nyckelordet som dyker upp
+        int index1 = input.indexOf(keyword1);
+        int index2 = input.indexOf(keyword2);
+
+        // Om båda nyckelorden hittades, använd det minsta indexet
+        int firstIndex = -1;
+        if (index1 != -1 && index2 != -1) {
+            firstIndex = Math.min(index1, index2);
+        } else if (index1 != -1) {
+            firstIndex = index1;
+        } else if (index2 != -1) {
+            firstIndex = index2;
+        }
+
+        // Om inget nyckelord hittades, returnera hela strängen
+        if (firstIndex == -1) {
+            return input;
+        }
+
+        // Extrahera och returnera strängen före det första nyckelordet
+        return input.substring(0, firstIndex).trim();
+    }
+
+
 
     // Method to fetch a document from a URL
     private Document fetchDocument(String url) {
